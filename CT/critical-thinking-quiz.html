@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Critical Thinking | 200 MCQ Quiz</title>
+    <style>
+      :root {
+        --ink: #17212b;
+        --muted: #65727e;
+        --paper: #f4f1ea;
+        --panel: #fffdf8;
+        --line: #d9d2c6;
+        --teal: #0e6868;
+        --teal-dark: #084d50;
+        --coral: #d8644b;
+        --gold: #e0a13b;
+        --good: #2b8057;
+        --bad: #b84242;
+        --shadow: 0 18px 50px rgba(23, 33, 43, 0.12);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(
+            circle at 8% 10%,
+            rgba(224, 161, 59, 0.16),
+            transparent 26rem
+          ),
+          linear-gradient(135deg, #f4f1ea 0%, #e9f1ee 100%);
+        font-family: Georgia, "Times New Roman", serif;
+        min-height: 100vh;
+      }
+      button {
+        font: inherit;
+      }
+      .shell {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 28px 20px 56px;
+      }
+      .masthead {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+      .kicker {
+        color: var(--coral);
+        font:
+          700 0.76rem/1.2 Arial,
+          sans-serif;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 8px 0 0;
+        max-width: 680px;
+        font-size: clamp(2.1rem, 5vw, 4.7rem);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+      }
+      .deck-note {
+        max-width: 250px;
+        color: var(--muted);
+        font:
+          0.88rem/1.5 Arial,
+          sans-serif;
+        text-align: right;
+      }
+      .quiz-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 22px;
+        align-items: start;
+      }
+      .panel {
+        background: rgba(255, 253, 248, 0.9);
+        border: 1px solid rgba(217, 210, 198, 0.9);
+        box-shadow: var(--shadow);
+      }
+      .main-panel {
+        padding: clamp(22px, 4vw, 48px);
+        min-height: 590px;
+      }
+      .side-panel {
+        padding: 24px;
+        position: sticky;
+        top: 18px;
+      }
+      .progress-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font:
+          700 0.78rem Arial,
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .progress-track {
+        height: 8px;
+        margin: 12px 0 40px;
+        overflow: hidden;
+        background: #e3ded5;
+      }
+      .progress-fill {
+        width: 0.5%;
+        height: 100%;
+        background: var(--coral);
+        transition: width 0.25s ease;
+      }
+      .question-number {
+        color: var(--teal);
+        font:
+          700 1rem Arial,
+          sans-serif;
+      }
+      h2 {
+        margin: 14px 0 26px;
+        max-width: 790px;
+        font-size: clamp(1.5rem, 3vw, 2.35rem);
+        line-height: 1.13;
+      }
+      .answers {
+        display: grid;
+        gap: 12px;
+      }
+      .answer {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 14px;
+        align-items: center;
+        width: 100%;
+        padding: 15px 17px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        text-align: left;
+        cursor: pointer;
+        transition:
+          transform 0.16s,
+          border-color 0.16s,
+          background 0.16s;
+      }
+      .answer:hover:not(:disabled) {
+        transform: translateX(4px);
+        border-color: var(--teal);
+      }
+      .answer-letter {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        color: var(--teal-dark);
+        background: #dcebea;
+        font:
+          700 0.85rem Arial,
+          sans-serif;
+      }
+      .answer.correct {
+        border-color: var(--good);
+        background: #e7f4eb;
+      }
+      .answer.wrong {
+        border-color: var(--bad);
+        background: #f9e7e4;
+      }
+      .answer.reveal {
+        border-color: var(--good);
+        background: #eef8f0;
+      }
+      .feedback {
+        min-height: 28px;
+        margin: 22px 0 0;
+        color: var(--muted);
+        font:
+          700 0.9rem/1.4 Arial,
+          sans-serif;
+      }
+      .feedback.good {
+        color: var(--good);
+      }
+      .feedback.bad {
+        color: var(--bad);
+      }
+      .controls {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 30px;
+      }
+      .btn {
+        border: 0;
+        padding: 13px 18px;
+        cursor: pointer;
+        font:
+          700 0.78rem Arial,
+          sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .btn-primary {
+        color: #fff;
+        background: var(--teal);
+      }
+      .btn-primary:hover {
+        background: var(--teal-dark);
+      }
+      .btn-quiet {
+        color: var(--teal-dark);
+        background: #e2eeeb;
+      }
+      .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+      }
+      .side-title {
+        margin: 0 0 18px;
+        color: var(--teal-dark);
+        font:
+          700 0.8rem Arial,
+          sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .score {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .score strong {
+        font-size: 3.3rem;
+        line-height: 1;
+      }
+      .score span {
+        color: var(--muted);
+        font:
+          0.78rem Arial,
+          sans-serif;
+      }
+      .stat-list {
+        display: grid;
+        gap: 14px;
+        margin: 20px 0 28px;
+      }
+      .stat {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font:
+          0.86rem Arial,
+          sans-serif;
+      }
+      .stat span {
+        color: var(--muted);
+      }
+      .stat strong {
+        color: var(--teal-dark);
+      }
+      .jump-grid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 5px;
+        max-height: 230px;
+        overflow: auto;
+        padding-right: 3px;
+      }
+      .jump {
+        min-height: 25px;
+        padding: 3px 0;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        background: transparent;
+        cursor: pointer;
+        font:
+          700 0.66rem Arial,
+          sans-serif;
+      }
+      .jump.current {
+        color: #fff;
+        border-color: var(--coral);
+        background: var(--coral);
+      }
+      .jump.done {
+        color: var(--teal-dark);
+        border-color: #9ac8bd;
+        background: #e2eeeb;
+      }
+      .jump.wrong {
+        color: var(--bad);
+        border-color: #e5aaa2;
+        background: #f9e7e4;
+      }
+      .results {
+        display: none;
+        text-align: center;
+        padding: 40px 10px;
+      }
+      .results.visible {
+        display: block;
+      }
+      .results h2 {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .result-score {
+        color: var(--coral);
+        font-size: 5rem;
+        line-height: 1;
+      }
+      .result-copy {
+        max-width: 540px;
+        margin: 18px auto 28px;
+        color: var(--muted);
+        font:
+          1rem/1.55 Arial,
+          sans-serif;
+      }
+      .hidden {
+        display: none !important;
+      }
+      @media (max-width: 820px) {
+        .masthead {
+          display: block;
+        }
+        .deck-note {
+          max-width: none;
+          margin-top: 15px;
+          text-align: left;
+        }
+        .quiz-grid {
+          grid-template-columns: 1fr;
+        }
+        .side-panel {
+          position: static;
+          order: -1;
+        }
+        .jump-grid {
+          grid-template-columns: repeat(20, 1fr);
+          max-height: 120px;
+        }
+      }
+      @media (max-width: 520px) {
+        .shell {
+          padding: 20px 12px 40px;
+        }
+        .main-panel {
+          padding: 22px 16px;
+        }
+        .controls {
+          flex-direction: column-reverse;
+        }
+        .controls .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div>
+          <div class="kicker">Critical Thinking / Assessment Lab</div>
+          <h1>Make the reasoning visible.</h1>
+        </div>
+        <p class="deck-note">
+          200 multiple-choice questions built around core concepts, standards,
+          arguments, evidence, assumptions, bias, and reasoning errors.
+        </p>
+      </header>
+
+      <div class="quiz-grid" id="quiz-view">
+        <section class="panel main-panel" aria-live="polite">
+          <div class="progress-line">
+            <span id="question-count">Question 1 of 200</span
+            ><span id="category-label">Foundations</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div id="question-card">
+            <div class="question-number" id="question-number">01</div>
+            <h2 id="question-text"></h2>
+            <div class="answers" id="answers"></div>
+            <p class="feedback" id="feedback" aria-live="assertive"></p>
+            <div class="controls">
+              <button class="btn btn-quiet" id="previous-btn" type="button">
+                Previous
+              </button>
+              <button
+                class="btn btn-primary"
+                id="next-btn"
+                type="button"
+                disabled
+              >
+                Next question
+              </button>
+            </div>
+          </div>
+          <div class="results" id="results">
+            <div class="kicker">Assessment complete</div>
+            <div class="result-score" id="result-score">0%</div>
+            <h2 id="result-title">Your reasoning profile is ready.</h2>
+            <p class="result-copy" id="result-copy"></p>
+            <button class="btn btn-primary" id="restart-btn" type="button">
+              Restart quiz
+            </button>
+          </div>
+        </section>
+
+        <aside class="panel side-panel">
+          <h2 class="side-title">Your progress</h2>
+          <div class="score">
+            <strong id="score-value">0</strong><span>correct so far</span>
+          </div>
+          <div class="stat-list">
+            <div class="stat">
+              <span>Answered</span><strong id="answered-value">0 / 200</strong>
+            </div>
+            <div class="stat">
+              <span>Accuracy</span><strong id="accuracy-value">0%</strong>
+            </div>
+            <div class="stat">
+              <span>Unanswered</span><strong id="remaining-value">200</strong>
+            </div>
+          </div>
+          <h2 class="side-title">Jump to question</h2>
+          <div class="jump-grid" id="jump-grid"></div>
+        </aside>
+      </div>
+    </main>
+
+    <script>
+      const concepts = [
+        [
+          "Critical thinking",
+          "the disciplined process of analyzing and evaluating information before forming a judgment",
+          "A student separates claims from evidence and checks both before deciding.",
+          "What evidence supports this conclusion, and what else could explain the facts?",
+          "unsupported conclusions and decisions based on habit or impulse",
+        ],
+        [
+          "Clarity",
+          "the standard of making a claim understandable and free from confusing wording",
+          "A writer defines what “success” means instead of using the word vaguely.",
+          "What exactly do you mean by that statement?",
+          "people may argue about different meanings without noticing",
+        ],
+        [
+          "Accuracy",
+          "the standard of being factually correct and supported by reliable information",
+          "A researcher checks a date against a trustworthy primary source.",
+          "Is the information true and verifiable?",
+          "a confident decision can be built on false information",
+        ],
+        [
+          "Precision",
+          "the standard of giving enough specific detail to make a claim useful",
+          "Instead of saying a service is “often late,” a report gives the average delay in minutes.",
+          "Can the claim be made more exact?",
+          "a broad claim may hide important variation",
+        ],
+        [
+          "Relevance",
+          "the standard of using information that directly bears on the question at hand",
+          "A budget decision considers operating costs rather than an unrelated personal preference.",
+          "How does this information connect to the issue?",
+          "time and attention are diverted by distractions",
+        ],
+        [
+          "Depth",
+          "the standard of addressing the complexities and underlying factors in an issue",
+          "An analysis of school attendance considers transport, health, family, and policy factors.",
+          "What complexities or difficulties does this issue involve?",
+          "a simple answer can miss causes and consequences",
+        ],
+        [
+          "Breadth",
+          "the standard of considering more than one viewpoint, frame, or interpretation",
+          "A policy is assessed from the perspectives of residents, workers, businesses, and visitors.",
+          "What other viewpoints should be considered?",
+          "one perspective can be mistaken for the whole picture",
+        ],
+        [
+          "Logic",
+          "the standard that the parts of reasoning fit together without contradiction",
+          "The conclusion follows from the stated reasons rather than from an unrelated opinion.",
+          "Do the reasons actually support the conclusion?",
+          "a persuasive-sounding argument may not hold together",
+        ],
+        [
+          "Significance",
+          "the standard of identifying the most important facts or consequences in an issue",
+          "A safety risk receives more attention than a minor design preference.",
+          "Which facts or consequences matter most here?",
+          "minor details can overwhelm the central issue",
+        ],
+        [
+          "Fairness",
+          "the standard of applying reasoning consistently without favoritism or double standards",
+          "A manager uses the same performance rule for friends and other employees.",
+          "Would I apply the same rule if the roles were reversed?",
+          "personal preference can be disguised as judgment",
+        ],
+        [
+          "Assumption",
+          "an unstated belief that reasoning takes for granted",
+          "A plan assumes customers have internet access even though this was never checked.",
+          "What is being taken for granted?",
+          "hidden beliefs can make an argument fragile",
+        ],
+        [
+          "Inference",
+          "a conclusion drawn from evidence and reasoning rather than directly observed",
+          "Seeing wet roads, a person infers that it may have rained.",
+          "What conclusion is reasonably supported by these facts?",
+          "a guess may be mistaken for an established fact",
+        ],
+        [
+          "Implication",
+          "a likely effect, consequence, or meaning that follows from a claim or decision",
+          "If a rule is enforced strictly, some exceptional cases may be affected.",
+          "If this is true, what follows from it?",
+          "important consequences remain unnoticed",
+        ],
+        [
+          "Evidence",
+          "information used to support, challenge, or assess a claim",
+          "A controlled test result is used to evaluate whether a product works.",
+          "What information would support or weaken this claim?",
+          "opinions can be treated as though they were proof",
+        ],
+        [
+          "Claim",
+          "a statement that asserts something and can be examined or supported",
+          "“The new timetable reduces waiting time” is a claim that can be tested.",
+          "What is the exact statement being asserted?",
+          "discussion becomes unfocused because no proposition is identified",
+        ],
+        [
+          "Reason",
+          "a statement offered to support why a claim should be accepted",
+          "A report cites lower fuel use as a reason to adopt a new vehicle.",
+          "Why should anyone accept this claim?",
+          "a conclusion is presented without support",
+        ],
+        [
+          "Conclusion",
+          "the judgment or position that an argument is trying to establish",
+          "After reviewing the results, the committee recommends changing the process.",
+          "What final position do the reasons point toward?",
+          "supporting details are mistaken for the main point",
+        ],
+        [
+          "Argument",
+          "a connected set of reasons offered in support of a conclusion",
+          "A proposal links evidence about cost and safety to a recommendation.",
+          "Which reasons are connected to which conclusion?",
+          "rhetoric can be mistaken for justified reasoning",
+        ],
+        [
+          "Premise",
+          "a reason or starting statement from which a conclusion is drawn",
+          "“All registered users must verify identity” functions as a premise in a policy argument.",
+          "What starting statement is the reasoning using?",
+          "the foundation of an argument remains unexamined",
+        ],
+        [
+          "Validity",
+          "the property of a deductive argument whose conclusion follows from its premises",
+          "If the premises were true, the conclusion would have to be true in a valid form.",
+          "Would the conclusion follow if the premises were true?",
+          "an argument may be logically structured but based on false premises",
+        ],
+        [
+          "Soundness",
+          "the combination of valid reasoning and true premises in a deductive argument",
+          "A sound argument has a reliable logical form and accurate starting facts.",
+          "Are the logic and the premises both reliable?",
+          "formal structure can create false confidence",
+        ],
+        [
+          "Inductive reasoning",
+          "reasoning that uses patterns or examples to support a probable conclusion",
+          "Several tested samples support the expectation that the wider batch is similar.",
+          "How strongly do the examples support a likely pattern?",
+          "a probability is treated as certainty",
+        ],
+        [
+          "Deductive reasoning",
+          "reasoning that applies general premises to reach a necessary conclusion",
+          "From a rule and a confirmed case, a necessary result is derived.",
+          "Does the conclusion follow necessarily from the rule and case?",
+          "a general rule may be applied without checking its conditions",
+        ],
+        [
+          "Source credibility",
+          "the degree to which a source is trustworthy, qualified, transparent, and relevant",
+          "A specialist explains methods, cites data, and discloses limitations.",
+          "Who produced this information and why should they be trusted?",
+          "unreliable information can gain influence through presentation",
+        ],
+        [
+          "Triangulation",
+          "checking a conclusion by comparing different sources, methods, or perspectives",
+          "A finding is compared across interviews, records, and direct observation.",
+          "Do independent lines of evidence point to the same result?",
+          "one flawed source can dominate the conclusion",
+        ],
+        [
+          "Confirmation bias",
+          "the tendency to notice or favor information that supports an existing belief",
+          "A person searches only for articles that agree with a prior opinion.",
+          "What evidence would challenge my current view?",
+          "beliefs become resistant to correction",
+        ],
+        [
+          "Availability bias",
+          "the tendency to judge likelihood by how easily examples come to mind",
+          "A dramatic news story makes a rare event seem common.",
+          "Am I estimating likelihood from memory vividness rather than data?",
+          "salient events distort risk judgment",
+        ],
+        [
+          "Anchoring bias",
+          "the tendency to rely too heavily on an initial number, idea, or impression",
+          "The first price mentioned influences later estimates even after better data appears.",
+          "Would my judgment change if the first figure had not been shown?",
+          "later reasoning is pulled toward an arbitrary starting point",
+        ],
+        [
+          "Ad hominem",
+          "an error that attacks a person instead of addressing the person’s argument",
+          "A proposal is dismissed because its author is unpopular, without examining the evidence.",
+          "Is the response addressing the claim or the person?",
+          "relevant reasoning is replaced by personal attack",
+        ],
+        [
+          "Straw man",
+          "an error that misrepresents a position so it is easier to attack",
+          "A modest request for regulation is portrayed as a demand to ban everything.",
+          "Has the opposing view been represented accurately?",
+          "debate is won against a position nobody actually holds",
+        ],
+        [
+          "False dilemma",
+          "an error that presents only two options when more possibilities exist",
+          "A debate claims that people must choose between total freedom and total control.",
+          "Are these genuinely the only available choices?",
+          "complex decisions are forced into an artificial binary",
+        ],
+        [
+          "Slippery slope",
+          "an error that asserts one step will inevitably lead to extreme outcomes without sufficient support",
+          "A small schedule change is said to guarantee complete organizational collapse.",
+          "What evidence shows that each step will necessarily follow?",
+          "fear of remote outcomes replaces probability analysis",
+        ],
+        [
+          "Hasty generalization",
+          "an error that draws a broad conclusion from too few or unrepresentative examples",
+          "One poor customer interaction is used to judge an entire company.",
+          "Is the sample large and representative enough?",
+          "an isolated case is mistaken for a pattern",
+        ],
+        [
+          "Appeal to authority",
+          "an error that treats a person’s status as proof without checking relevant evidence",
+          "A celebrity’s opinion is accepted as medical evidence because of fame.",
+          "Is the authority qualified on this exact question, and is evidence provided?",
+          "expertise is confused with infallibility",
+        ],
+        [
+          "Circular reasoning",
+          "an error in which the conclusion is assumed in the supporting reason",
+          "A rule is called fair because it is the fairest rule, without independent support.",
+          "Does the reason provide new support or merely repeat the conclusion?",
+          "an unsupported belief appears to justify itself",
+        ],
+        [
+          "Red herring",
+          "an error that introduces an irrelevant issue to distract from the actual question",
+          "When asked about safety records, a speaker discusses the company logo.",
+          "Does this point address the question being asked?",
+          "attention moves away from the evidence that matters",
+        ],
+        [
+          "Correlation and causation",
+          "the distinction between variables moving together and one variable causing another",
+          "Two trends rise together, but a third factor may explain both.",
+          "What evidence shows a causal mechanism rather than mere association?",
+          "an association is mistaken for proof of cause",
+        ],
+        [
+          "Metacognition",
+          "the practice of monitoring and evaluating one’s own thinking",
+          "A learner reviews how a conclusion was formed and where uncertainty remains.",
+          "How did I reach this judgment, and what could I be missing?",
+          "errors remain invisible because the process is never examined",
+        ],
+        [
+          "Intellectual humility",
+          "the willingness to recognize limits, revise beliefs, and admit uncertainty",
+          "A researcher updates a position after strong contrary evidence appears.",
+          "What would make me change my mind?",
+          "confidence becomes detached from knowledge",
+        ],
+        [
+          "Open-mindedness",
+          "the willingness to consider relevant alternatives without accepting every claim uncritically",
+          "A reviewer considers a competing explanation before comparing evidence.",
+          "Which plausible alternative deserves a fair test?",
+          "premature closure prevents learning",
+        ],
+        [
+          "Problem definition",
+          "the disciplined act of stating what issue must actually be solved",
+          "A team distinguishes slow service from the deeper problem of an unclear process.",
+          "What problem are we solving, in precise terms?",
+          "resources are spent solving the wrong problem",
+        ],
+      ];
+
+      const letters = ["A", "B", "C", "D"];
+      const questions = [];
+      const templates = [
+        (c) => ({
+          stem: `Which option best defines ${c[0]}?`,
+          answer: c[1],
+          kind: "definition",
+        }),
+        (c) => ({
+          stem: `Which situation is the clearest example of ${c[0]}?`,
+          answer: c[2],
+          kind: "application",
+        }),
+        (c) => ({
+          stem: `A careful thinker applying ${c[0]} would most likely ask:`,
+          answer: c[3],
+          kind: "practice",
+        }),
+        (c) => ({
+          stem: `What is the main danger of ignoring ${c[0]}?`,
+          answer: c[4],
+          kind: "risk",
+        }),
+        (c) => ({
+          stem: `Which action most directly demonstrates ${c[0]} in an investigation?`,
+          answer: c[2],
+          kind: "investigation",
+        }),
+      ];
+
+      concepts.slice(0, 40).forEach((concept, conceptIndex) => {
+        templates.forEach((makeQuestion, templateIndex) => {
+          const item = makeQuestion(concept);
+          const fieldIndex =
+            templateIndex === 0
+              ? 1
+              : templateIndex === 1 || templateIndex === 4
+                ? 2
+                : templateIndex === 2
+                  ? 3
+                  : 4;
+          const distractors = [];
+          for (let step = 1; distractors.length < 3; step += 1) {
+            const other =
+              concepts[
+                (conceptIndex + step * 7 + templateIndex) % concepts.length
+              ][fieldIndex];
+            if (other !== item.answer && !distractors.includes(other))
+              distractors.push(other);
+          }
+          const options = [item.answer, ...distractors];
+          for (let i = options.length - 1; i > 0; i -= 1) {
+            const j =
+              (conceptIndex * 13 + templateIndex * 11 + i * 3) % (i + 1);
+            [options[i], options[j]] = [options[j], options[i]];
+          }
+          questions.push({
+            id: questions.length + 1,
+            category: concept[0],
+            text: item.stem,
+            options,
+            answer: options.indexOf(item.answer),
+            explanation: `The best answer reflects ${concept[0]}: ${concept[1]}.`,
+          });
+        });
+      });
+
+      let current = 0;
+      const responses = Array(questions.length).fill(null);
+      const questionText = document.getElementById("question-text");
+      const questionNumber = document.getElementById("question-number");
+      const questionCount = document.getElementById("question-count");
+      const categoryLabel = document.getElementById("category-label");
+      const answers = document.getElementById("answers");
+      const feedback = document.getElementById("feedback");
+      const nextButton = document.getElementById("next-btn");
+      const previousButton = document.getElementById("previous-btn");
+      const progressFill = document.getElementById("progress-fill");
+      const scoreValue = document.getElementById("score-value");
+      const answeredValue = document.getElementById("answered-value");
+      const accuracyValue = document.getElementById("accuracy-value");
+      const remainingValue = document.getElementById("remaining-value");
+      const jumpGrid = document.getElementById("jump-grid");
+      const questionCard = document.getElementById("question-card");
+      const results = document.getElementById("results");
+
+      function score() {
+        return responses.filter(
+          (value, index) => value !== null && value === questions[index].answer,
+        ).length;
+      }
+      function answered() {
+        return responses.filter((value) => value !== null).length;
+      }
+      function updateStats() {
+        const done = answered();
+        const correct = score();
+        scoreValue.textContent = correct;
+        answeredValue.textContent = `${done} / ${questions.length}`;
+        accuracyValue.textContent = `${done ? Math.round((correct / done) * 100) : 0}%`;
+        remainingValue.textContent = questions.length - done;
+        document.querySelectorAll(".jump").forEach((button, index) => {
+          button.classList.toggle("current", index === current);
+          button.classList.toggle(
+            "done",
+            responses[index] !== null &&
+              responses[index] === questions[index].answer,
+          );
+          button.classList.toggle(
+            "wrong",
+            responses[index] !== null &&
+              responses[index] !== questions[index].answer,
+          );
+        });
+      }
+      function render() {
+        const item = questions[current];
+        const response = responses[current];
+        questionNumber.textContent = String(item.id).padStart(2, "0");
+        questionCount.textContent = `Question ${item.id} of ${questions.length}`;
+        categoryLabel.textContent = item.category;
+        questionText.textContent = item.text;
+        progressFill.style.width = `${(item.id / questions.length) * 100}%`;
+        answers.innerHTML = "";
+        item.options.forEach((option, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer";
+          button.innerHTML = `<span class="answer-letter">${letters[index]}</span><span>${option}</span>`;
+          button.disabled = response !== null;
+          if (response !== null) {
+            if (index === item.answer)
+              button.classList.add(
+                response === item.answer ? "correct" : "reveal",
+              );
+            if (index === response && response !== item.answer)
+              button.classList.add("wrong");
+          }
+          button.addEventListener("click", () => choose(index));
+          answers.appendChild(button);
+        });
+        feedback.className = "feedback";
+        if (response !== null) {
+          feedback.textContent =
+            response === item.answer
+              ? `Correct. ${item.explanation}`
+              : `Not quite. ${item.explanation}`;
+          feedback.classList.add(response === item.answer ? "good" : "bad");
+        } else {
+          feedback.textContent = "Choose the strongest answer.";
+        }
+        nextButton.disabled = response === null;
+        nextButton.textContent =
+          current === questions.length - 1 ? "See results" : "Next question";
+        previousButton.disabled = current === 0;
+        updateStats();
+      }
+      function choose(index) {
+        if (responses[current] !== null) return;
+        responses[current] = index;
+        render();
+      }
+      function showResults() {
+        questionCard.classList.add("hidden");
+        results.classList.add("visible");
+        const correct = score();
+        const percent = Math.round((correct / questions.length) * 100);
+        document.getElementById("result-score").textContent = `${percent}%`;
+        document.getElementById("result-title").textContent =
+          percent >= 80
+            ? "Strong analytical control."
+            : percent >= 60
+              ? "A useful base to build on."
+              : "The next pass is where the insight compounds.";
+        document.getElementById("result-copy").textContent =
+          `You answered ${correct} of ${questions.length} questions correctly. Review the question map to revisit concepts where your reasoning needs another look.`;
+      }
+      nextButton.addEventListener("click", () => {
+        if (current === questions.length - 1) showResults();
+        else {
+          current += 1;
+          render();
+        }
+      });
+      previousButton.addEventListener("click", () => {
+        if (current > 0) {
+          current -= 1;
+          render();
+        }
+      });
+      document.getElementById("restart-btn").addEventListener("click", () => {
+        responses.fill(null);
+        current = 0;
+        results.classList.remove("visible");
+        questionCard.classList.remove("hidden");
+        render();
+      });
+      questions.forEach((question, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "jump";
+        button.textContent = question.id;
+        button.title = `Go to question ${question.id}`;
+        button.addEventListener("click", () => {
+          current = index;
+          render();
+        });
+        jumpGrid.appendChild(button);
+      });
+      render();
+    </script>
+  </body>
+</html>
