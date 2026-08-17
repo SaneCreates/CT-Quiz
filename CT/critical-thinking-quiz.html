@@ -1119,15 +1119,21 @@
       const pdfTabButton = document.getElementById("pdf-tab-btn");
       const quizPanel = document.getElementById("quiz-panel");
       const pdfPanel = document.getElementById("pdf-panel");
-      const pdfQuestions = window.pdfQuestionBank.flatMap((group) =>
-        group.questions.map((question) => ({
-          sourceNumber: question.number,
-          category: group.title,
-          sourceId: group.id,
-          text: question.stem,
-          options: question.options,
-        })),
-      );
+      const pdfQuestions = window.pdfQuestionBank
+        .flatMap((group) =>
+          group.questions.map((question) => ({
+            sourceNumber: question.number,
+            category: group.title,
+            sourceId: group.id,
+            text: question.stem,
+            options: question.options,
+          })),
+        )
+        .filter((question) => {
+          const hasText = typeof question.text === "string" && question.text.trim().length > 0;
+          const hasUsableOptions = Array.isArray(question.options) && question.options.length >= 2;
+          return hasText && hasUsableOptions;
+        });
       const pdfAnswerOverrides = {
         "40-exams-type-mcqs": {
           1: 1,
