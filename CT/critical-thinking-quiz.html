@@ -196,6 +196,95 @@
         gap: 12px;
         margin-top: 30px;
       }
+      .tab-bar {
+        display: flex;
+        gap: 10px;
+        margin: 18px 0 22px;
+      }
+      .tab {
+        border: 1px solid var(--line);
+        padding: 12px 16px;
+        color: var(--teal-dark);
+        background: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font:
+          700 0.78rem Arial,
+          sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .tab.active {
+        color: #fff;
+        border-color: var(--teal);
+        background: var(--teal);
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+      .bank-panel {
+        padding: clamp(22px, 4vw, 48px);
+      }
+      .bank-note {
+        max-width: 760px;
+        margin: 0 0 22px;
+        color: var(--muted);
+        font:
+          0.92rem/1.5 Arial,
+          sans-serif;
+      }
+      .pdf-quiz-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 22px;
+        align-items: start;
+      }
+      .pdf-progress-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font:
+          700 0.78rem Arial,
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .pdf-progress-track {
+        height: 8px;
+        margin: 12px 0 40px;
+        overflow: hidden;
+        background: #e3ded5;
+      }
+      .pdf-progress-fill {
+        width: 0.5%;
+        height: 100%;
+        background: var(--gold);
+        transition: width 0.25s ease;
+      }
+      .pdf-question-number {
+        color: var(--teal);
+        font:
+          700 1rem Arial,
+          sans-serif;
+      }
+      .pdf-result-copy {
+        max-width: 540px;
+        margin: 18px auto 28px;
+        color: var(--muted);
+        font:
+          1rem/1.55 Arial,
+          sans-serif;
+      }
+      .pdf-answering-note {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font:
+          0.88rem/1.5 Arial,
+          sans-serif;
+      }
       .btn {
         border: 0;
         padding: 13px 18px;
@@ -373,72 +462,156 @@
           <h1>Make the reasoning visible.</h1>
         </div>
         <p class="deck-note">
-          200 multiple-choice questions built around core concepts, standards,
-          arguments, evidence, assumptions, bias, and reasoning errors.
+          200 multiple-choice questions for the main quiz, plus a PDF question
+          bank extracted from the source files in the CT folder.
         </p>
       </header>
 
-      <div class="quiz-grid" id="quiz-view">
-        <section class="panel main-panel" aria-live="polite">
-          <div class="progress-line">
-            <span id="question-count">Question 1 of 200</span
-            ><span id="category-label">Foundations</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <div id="question-card">
-            <div class="question-number" id="question-number">01</div>
-            <h2 id="question-text"></h2>
-            <div class="answers" id="answers"></div>
-            <p class="feedback" id="feedback" aria-live="assertive"></p>
-            <div class="controls">
-              <button class="btn btn-quiet" id="previous-btn" type="button">
-                Previous
-              </button>
-              <button
-                class="btn btn-primary"
-                id="next-btn"
-                type="button"
-                disabled
-              >
-                Next question
-              </button>
-            </div>
-          </div>
-          <div class="results" id="results">
-            <div class="kicker">Assessment complete</div>
-            <div class="result-score" id="result-score">0%</div>
-            <h2 id="result-title">Your reasoning profile is ready.</h2>
-            <p class="result-copy" id="result-copy"></p>
-            <button class="btn btn-primary" id="restart-btn" type="button">
-              Restart quiz
-            </button>
-          </div>
-        </section>
-
-        <aside class="panel side-panel">
-          <h2 class="side-title">Your progress</h2>
-          <div class="score">
-            <strong id="score-value">0</strong><span>correct so far</span>
-          </div>
-          <div class="stat-list">
-            <div class="stat">
-              <span>Answered</span><strong id="answered-value">0 / 200</strong>
-            </div>
-            <div class="stat">
-              <span>Accuracy</span><strong id="accuracy-value">0%</strong>
-            </div>
-            <div class="stat">
-              <span>Unanswered</span><strong id="remaining-value">200</strong>
-            </div>
-          </div>
-          <h2 class="side-title">Jump to question</h2>
-          <div class="jump-grid" id="jump-grid"></div>
-        </aside>
+      <div class="tab-bar" role="tablist" aria-label="Quiz sections">
+        <button class="tab active" id="quiz-tab-btn" type="button">
+          Generated quiz
+        </button>
+        <button class="tab" id="pdf-tab-btn" type="button">
+          PDF questions
+        </button>
       </div>
+
+      <section class="tab-panel active" id="quiz-panel" aria-live="polite">
+        <div class="quiz-grid" id="quiz-view">
+          <section class="panel main-panel">
+            <div class="progress-line">
+              <span id="question-count">Question 1 of 200</span
+              ><span id="category-label">Foundations</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="question-card">
+              <div class="question-number" id="question-number">01</div>
+              <h2 id="question-text"></h2>
+              <div class="answers" id="answers"></div>
+              <p class="feedback" id="feedback" aria-live="assertive"></p>
+              <div class="controls">
+                <button class="btn btn-quiet" id="previous-btn" type="button">
+                  Previous
+                </button>
+                <button
+                  class="btn btn-primary"
+                  id="next-btn"
+                  type="button"
+                  disabled
+                >
+                  Next question
+                </button>
+              </div>
+            </div>
+            <div class="results" id="results">
+              <div class="kicker">Assessment complete</div>
+              <div class="result-score" id="result-score">0%</div>
+              <h2 id="result-title">Your reasoning profile is ready.</h2>
+              <p class="result-copy" id="result-copy"></p>
+              <button class="btn btn-primary" id="restart-btn" type="button">
+                Restart quiz
+              </button>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <h2 class="side-title">Your progress</h2>
+            <div class="score">
+              <strong id="score-value">0</strong><span>correct so far</span>
+            </div>
+            <div class="stat-list">
+              <div class="stat">
+                <span>Answered</span><strong id="answered-value">0 / 200</strong>
+              </div>
+              <div class="stat">
+                <span>Accuracy</span><strong id="accuracy-value">0%</strong>
+              </div>
+              <div class="stat">
+                <span>Unanswered</span><strong id="remaining-value">200</strong>
+              </div>
+            </div>
+            <h2 class="side-title">Jump to question</h2>
+            <div class="jump-grid" id="jump-grid"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="pdf-panel">
+        <p class="bank-note">
+          Extracted from the readable CT PDF files in the source folder. You
+          can answer these questions one by one just like the main quiz.
+        </p>
+        <div class="quiz-grid pdf-quiz-grid" id="pdf-quiz-view">
+          <section class="panel main-panel">
+            <div class="pdf-progress-line">
+              <span id="pdf-question-count">Question 1 of 200</span>
+              <span id="pdf-category-label">40 Exams Type Mcqs</span>
+            </div>
+            <div class="pdf-progress-track">
+              <div class="pdf-progress-fill" id="pdf-progress-fill"></div>
+            </div>
+            <div id="pdf-question-card">
+              <div class="pdf-question-number" id="pdf-question-number">01</div>
+              <h2 id="pdf-question-text"></h2>
+              <p class="pdf-answering-note" id="pdf-answering-note">
+                Choose the strongest answer. Scoring uses inferred answers from
+                the question text only.
+              </p>
+              <div class="answers" id="pdf-answers"></div>
+              <p class="feedback" id="pdf-feedback" aria-live="assertive"></p>
+              <div class="controls">
+                <button
+                  class="btn btn-quiet"
+                  id="pdf-previous-btn"
+                  type="button"
+                >
+                  Previous
+                </button>
+                <button
+                  class="btn btn-primary"
+                  id="pdf-next-btn"
+                  type="button"
+                  disabled
+                >
+                  Next question
+                </button>
+              </div>
+            </div>
+            <div class="results" id="pdf-results">
+              <div class="kicker">PDF quiz complete</div>
+              <div class="result-score" id="pdf-result-score">200</div>
+              <h2 id="pdf-result-title">You have answered the imported set.</h2>
+              <p class="pdf-result-copy" id="pdf-result-copy"></p>
+              <button class="btn btn-primary" id="pdf-restart-btn" type="button">
+                Restart PDF quiz
+              </button>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <h2 class="side-title">PDF quiz progress</h2>
+            <div class="score">
+              <strong id="pdf-score-value">0</strong>
+              <span>answered so far</span>
+            </div>
+            <div class="stat-list">
+              <div class="stat">
+                <span>Answered</span><strong id="pdf-answered-value">0 / 200</strong>
+              </div>
+              <div class="stat">
+                <span>Remaining</span><strong id="pdf-remaining-value">200</strong>
+              </div>
+            </div>
+            <h2 class="side-title">Jump to question</h2>
+            <div class="jump-grid" id="pdf-jump-grid"></div>
+          </aside>
+        </div>
+      </section>
     </main>
 
+    <script src="pdf-question-bank.js"></script>
     <script>
       const concepts = [
         [
@@ -831,7 +1004,7 @@
         answeredValue.textContent = `${done} / ${questions.length}`;
         accuracyValue.textContent = `${done ? Math.round((correct / done) * 100) : 0}%`;
         remainingValue.textContent = questions.length - done;
-        document.querySelectorAll(".jump").forEach((button, index) => {
+        jumpGrid.querySelectorAll(".jump").forEach((button, index) => {
           button.classList.toggle("current", index === current);
           button.classList.toggle(
             "done",
@@ -940,6 +1113,543 @@
         jumpGrid.appendChild(button);
       });
       render();
+    </script>
+    <script>
+      const quizTabButton = document.getElementById("quiz-tab-btn");
+      const pdfTabButton = document.getElementById("pdf-tab-btn");
+      const quizPanel = document.getElementById("quiz-panel");
+      const pdfPanel = document.getElementById("pdf-panel");
+      const pdfQuestions = window.pdfQuestionBank.flatMap((group) =>
+        group.questions.map((question) => ({
+          sourceNumber: question.number,
+          category: group.title,
+          sourceId: group.id,
+          text: question.stem,
+          options: question.options,
+        })),
+      );
+      const pdfAnswerOverrides = {
+        "40-exams-type-mcqs": {
+          1: 1,
+          3: 1,
+          4: 1,
+          5: 1,
+          6: 1,
+          7: 1,
+          8: 1,
+          9: 1,
+          10: 1,
+          11: 1,
+          12: 1,
+          13: 1,
+          14: 1,
+          15: 1,
+          16: 2,
+          17: 0,
+          18: 0,
+          19: 1,
+          20: 1,
+          21: 0,
+          22: 1,
+          24: 1,
+          25: 0,
+          26: 1,
+          27: 1,
+          28: 1,
+          29: 1,
+          30: 1,
+          32: 0,
+          33: 1,
+          34: 0,
+          35: 2,
+          36: 1,
+          37: 1,
+          38: 2,
+          39: 1,
+          40: 0,
+        },
+        "critical-thinking-practice-questions": {
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 1,
+          5: 1,
+          6: 1,
+          7: 1,
+          8: 1,
+          9: 1,
+          10: 2,
+          11: 1,
+          12: 1,
+          13: 1,
+          14: 1,
+          15: 2,
+          16: 1,
+          17: 3,
+          18: 2,
+          19: 1,
+          20: 2,
+          21: 1,
+          22: 3,
+          23: 2,
+          24: 3,
+          25: 1,
+          26: 1,
+          27: 2,
+          28: 2,
+          29: 1,
+          30: 1,
+          31: 1,
+          32: 1,
+          33: 2,
+        },
+        "exams-augsep-2025-set-1": {
+          1: 1,
+          2: 2,
+          3: 1,
+          4: 0,
+          5: 1,
+          6: 0,
+          7: 2,
+          8: 2,
+          9: 1,
+          10: 2,
+          11: 1,
+          12: 0,
+          13: 0,
+          14: 0,
+          15: 0,
+          16: 0,
+          17: 1,
+          18: 0,
+          19: 0,
+          20: 1,
+          21: 1,
+          22: 2,
+          23: 1,
+          24: 0,
+          25: 0,
+          26: 1,
+          27: 0,
+          28: 0,
+          29: 0,
+          30: 0,
+        },
+        "exams-augsep-2025-set-2": {
+          1: 1,
+          2: 1,
+          3: 1,
+          4: 1,
+          5: 1,
+          6: 1,
+          7: 0,
+          8: 2,
+          9: 1,
+          10: 0,
+          11: 1,
+          12: 1,
+          13: 1,
+          14: 0,
+          15: 3,
+          16: 3,
+          17: 1,
+          18: 2,
+          19: 1,
+          20: 2,
+          21: 0,
+          22: 0,
+          23: 1,
+          24: 0,
+          25: 1,
+          26: 0,
+          27: 1,
+          28: 1,
+          29: 0,
+          30: 0,
+        },
+      };
+      function normalizeText(value) {
+        return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      }
+      function scoreOption(optionText, hints) {
+        const text = normalizeText(optionText);
+        return hints.reduce((total, hint) => total + (text.includes(hint) ? 1 : 0), 0);
+      }
+      function inferPdfAnswerIndex(question, flatIndex) {
+        if (!question) return 0;
+        if (typeof flatIndex === "number" && flatIndex >= 49) {
+          const generated = pdfGeneratedAnswerRules.find(([pattern]) =>
+            pattern.test(question.text),
+          );
+          if (generated) return generated[1];
+        }
+        const groupOverrides = pdfAnswerOverrides[question.sourceId];
+        if (
+          groupOverrides &&
+          Object.prototype.hasOwnProperty.call(groupOverrides, question.sourceNumber)
+        ) {
+          return groupOverrides[question.sourceNumber];
+        }
+        const stem = normalizeText(question.text);
+        const options = question.options.map((option) => normalizeText(option.text));
+        const pickByOptionHints = (hints) => {
+          let bestIndex = 0;
+          let bestScore = -1;
+          options.forEach((optionText, index) => {
+            const score = scoreOption(optionText, hints);
+            if (score > bestScore) {
+              bestScore = score;
+              bestIndex = index;
+            }
+          });
+          return bestIndex;
+        };
+        const rules = [
+          [/best define[s]? critical thinking|best definition of critical thinking/, ["analyzing evaluating information", "intellectually disciplined process"]],
+          [/what is the first step in the critical thinking process/, ["gathering information"]],
+          [/what is integrated thought|integrated thought in engineering involves/, ["combining different perspectives and disciplines", "drawing upon knowledge from various disciplines"]],
+          [/what role does scepticism play in critical thinking/, ["questioning and deeper investigation"]],
+          [/sign of strong critical thinking/, ["questioning assumptions"]],
+          [/not a characteristic of a critical thinker|not a component of critical thinking|accepting all claims without question/, ["accepting all claims without question", "rigid thinking", "accepting all information", "refusing to recognize the limitations"]],
+          [/main goal of evaluating the credibility of a claim|evaluating the credibility of a claim|when assessing the credibility of a claim/, ["determine if it can be trusted", "investigate the evidence and sources"]],
+          [/what is credibility|credibility depends primarily|trustworthiness|assessing credibility|what should you consider when evaluating the credibility of a source/, ["qualifications", "expertise", "trustworthiness", "independent sources", "author's qualifications and expertise"]],
+          [/what is the purpose of rhetorical devices|rhetorical devices|rhetorical devices are used to/, ["persuade", "communicate effectively", "simplify complex ideas", "manipulate and persuade the audience"]],
+          [/which component of critical thinking involves breaking down complex ideas/, ["analysis"]],
+          [/which component of critical thinking/, ["analysis"]],
+          [/important in engineering|critical thinking in engineering leads to|why is critical thinking important in engineering/, ["problem solving", "decision making", "efficient allocation of resources", "improves communication skills"]],
+          [/critical thinking helps individuals to|how does critical thinking benefit individuals in their personal lives/, ["think clearly and rationally", "improves communication skills"]],
+          [/best defines critical thinking is|critical thinking involves/, ["analyzing evaluating information", "analyzing and evaluating information"]],
+          [/what is the core essence of critical thinking/, ["asking probing questions", "seeking answers"]],
+          [/this option best defines|what is the core essence|what is the central idea of/, ["analyzing", "evaluating", "asking probing questions"]],
+          [/a claim about material properties .* always credible/, ["false"]],
+          [/deductive reasoning starts with/, ["general premises"]],
+          [/inductive reasoning/, ["draws probable generalizations", "specific examples", "specific tests"]],
+          [/abductive reasoning/, ["diagnosing", "incomplete data"]],
+          [/ad hominem/, ["attacking the person instead of the argument"]],
+          [/slippery slope/, ["one event is said to lead to a chain of bad events", "one step will inevitably lead to extreme outcomes"]],
+          [/false dilemma/, ["only two options when more possibilities exist"]],
+          [/hasty generalization/, ["draws a broad conclusion from too few", "unrepresentative examples"]],
+          [/appeal to authority/, ["status as proof", "qualified on this exact question"]],
+          [/circular reasoning/, ["conclusion is assumed in the supporting reason", "repeat the conclusion"]],
+          [/red herring/, ["irrelevant issue to distract"]],
+          [/correlation and causation/, ["causal mechanism", "proof of cause"]],
+          [/metacognition/, ["monitoring and evaluating one s own thinking"]],
+          [/intellectual humility/, ["recognize limits", "admit uncertainty"]],
+          [/open-mindedness/, ["consider relevant alternatives"]],
+          [/problem definition/, ["stating what issue must actually be solved"]],
+          [/source credibility/, ["trustworthy", "qualified", "transparent", "relevant"]],
+          [/triangulation/, ["different sources", "methods", "perspectives"]],
+          [/confirmation bias/, ["challenge my current view"]],
+          [/availability bias/, ["memory vividness", "rather than data"]],
+          [/anchoring bias/, ["first figure", "initial number"]],
+          [/logic/, ["fit together without contradiction"]],
+          [/claim/, ["statement that asserts something"]],
+          [/reason/, ["offered to support"]],
+          [/conclusion/, ["judgment or position"]],
+          [/argument/, ["connected set of reasons"]],
+          [/premise/, ["starting statement"]],
+          [/validity/, ["if the premises were true"]],
+          [/soundness/, ["valid reasoning and true premises"]],
+          [/inference/, ["conclusion drawn from evidence"]],
+          [/implication/, ["likely effect", "consequence", "meaning that follows"]],
+          [/evidence/, ["information used to support", "challenge", "assess a claim"]],
+          [/bias/, ["favor information", "existing belief"]],
+          [/fairness/, ["same rule", "consistently without favoritism"]],
+          [/assumption/, ["unstated belief"]],
+        ];
+        for (const [pattern, hints] of rules) {
+          if (pattern.test(stem)) return pickByOptionHints(hints);
+        }
+        const weightedHints = [
+          ["analyzing", 2],
+          ["evaluating", 2],
+          ["understanding", 1],
+          ["problem solving", 1],
+          ["decision making", 1],
+          ["trust", 1],
+          ["evidence", 1],
+          ["questioning", 1],
+        ];
+        let bestIndex = 0;
+        let bestScore = -1;
+        options.forEach((optionText, index) => {
+          const score = weightedHints.reduce(
+            (total, [hint, weight]) => total + (optionText.includes(hint) ? weight : 0),
+            0,
+          );
+          if (score > bestScore) {
+            bestScore = score;
+            bestIndex = index;
+          }
+        });
+        return bestIndex;
+      }
+      const pdfGeneratedAnswerRules = [
+        [/an argument consists of/i, 1],
+        [/a deductive argument is characterized by/i, 1],
+        [/purpose of identifying premises in an argument/i, 2],
+        [/umbrella analysis in engineering involves/i, 1],
+        [/benefit of using umbrella analysis in engineering/i, 3],
+        [/universal intellectual standards for engineering reasoning include/i, 2],
+        [/engineering reasoning involves/i, 1],
+        [/formulation of engineering solutions requires/i, 2],
+        [/when approaching engineering problems, critical thinking involves/i, 1],
+        [/ethical considerations in engineering decision-making/i, 3],
+        [/when making engineering decisions, it is important to/i, 2],
+        [/creative problem-solving in engineering involves/i, 1],
+        [/brainstorming is a technique used to/i, 1],
+        [/when balancing creativity with feasibility in engineering design/i, 2],
+        [/effective technical communication involves/i, 2],
+        [/critical reading involves/i, 1],
+        [/goal of critical reading is to/i, 1],
+        [/capstone project in critical thinking often requires students to/i, 1],
+        [/reflection in critical thinking involves/i, 1],
+        [/critical thinking enhances an individual's ability/i, 2],
+        [/what is the definition of critical thinking/i, 2],
+        [/how does critical thinking contribute to solving complex problems/i, 2],
+        [/why is lifelong learning important in engineering/i, 2],
+        [/what does systems thinking require engineers to consider/i, 2],
+        [/what does critical thinking help engineers do with regards to emerging technologies/i, 2],
+        [/which skill enables engineers to construct compelling arguments/i, 2],
+        [/in which field is interdisciplinary collaboration most prevalent/i, 2],
+        [/goal of risk assessment and management in engineering/i, 1],
+        [/process of breaking down complex ideas.*examine their structure.*assumptions.*implications/i, 3],
+        [/process of combining existing ideas.*generate new insights or solutions/i, 2],
+        [/ability to draw logical conclusions based on available evidence/i, 2],
+        [/which component.*articulating and justifying.*reasoning.*clear.*coherent.*persuasive manner/i, 1],
+        [/application of critical thinking skills.*identify.*analyze.*and address specific issues/i, 1],
+        [/what is integrated thought in engineering/i, 1],
+        [/working with professionals from diverse fields.*complex problems.*engineering/i, 2],
+        [/developing solutions that effectively address the needs of end-users and stakeholders/i, 2],
+        [/what is ethical reasoning in engineering/i, 2],
+        [/which component.*recognizing one's own biases.*assumptions.*limitations/i, 0],
+        [/inductive reasoning is commonly used in/i, 1],
+        [/what mistake has peter committed.*critical thinking/i, 2],
+        [/which of these can be considered thinking critically/i, 2],
+        [/which is not the characteristic of a critical thinker/i, 1],
+        [/don't believe what k says about power generation/i, 0],
+        [/the failed transformer.*there will be no power the whole day/i, 0],
+        [/we want to stop the use of sf6 circuit breakers/i, 0],
+        [/even though it's only the first day.*boring course/i, 0],
+        [/if we pass laws against fully automatic weapons/i, 0],
+        [/what is the definition of critical thinking\?/i, 1],
+        [/which of the following is not part of critical thinking/i, 1],
+        [/which of the following is not a characteristic of a critical thinker/i, 1],
+        [/for this entire semester.*score an a|what is the mistake.*wishful thinking/i, 2],
+        [/when you encounter information, what should be kept in mind/i, 3],
+        [/what is the worst thing for a critical thinker/i, 2],
+        [/when students think critically in mathematics/i, 2],
+        [/a student who applies critical thinking.*pythagorean/i, 3],
+        [/what is the most important question you can ask in any situation/i, 2],
+        [/when a problem arises, you should take time to/i, 2],
+        [/which student is asking the most imaginative question/i, 2],
+        [/importance of critical thinking is/i, 3],
+        [/which of the following is not a critical thinking standards/i, 0],
+        [/questions that can be asked to gain clarity except/i, 3],
+        [/precision except/i, 0],
+        [/questions to achieve accuracy/i, 3],
+        [/which of the following skillsets is most important when entering the workforce/i, 0],
+        [/to seek relevancy, a good question would be/i, 0],
+        [/questions to address inconsistency except/i, 1],
+        [/what is the meaning of current information/i, 2],
+        [/completeness in critical thinking refers to deep and comprehensive thinking/i, 0],
+        [/fairness in critical thinking refers to the following except/i, 2],
+        [/one benefits of critical thinking is to help avoid making foolish and personal decisions/i, 0],
+        [/two key aspect of credibility are/i, 3],
+        [/following are not techniques for accessing credibility except/i, 2],
+        [/rhetorical devices are not important the critical thinker/i, 1],
+        [/following are examples of metaphors except/i, 0],
+        [/common rhetorical devices in mathematics except/i, 3],
+        [/inductive reasoning is SECTION B/i, 0],
+        [/in critical thinking, what does “clarity” mean\?/i, 1],
+        [/intellectual standard ensures a statement contains enough detail to understand it fully/i, 2],
+        [/main goal of evaluating the credibility of a claim/i, 1],
+        [/in rhetorical devices, a “slippery slope” refers to/i, 0],
+        [/which intellectual standard ensures ideas are related to the topic/i, 1],
+        [/which of these is an example of “appeal to authority”\?/i, 0],
+        [/most central to deciding next steps/i, 2],
+        [/aspect of integrated thought is most exemplified/i, 2],
+        [/which response best illustrates strong synthesis/i, 2],
+      ];
+      const pdfManualAnswerMap = new Map();
+      const pdfFlatAnswerOverrides = Array(200).fill(null);
+      const pdfKnownPdfManualOverrides = new Map([
+        [50, 1],
+        [51, 2],
+      ]);
+      for (const [index, answerIndex] of pdfKnownPdfManualOverrides) {
+        pdfFlatAnswerOverrides[index] = answerIndex;
+      }
+      const pdfQuestionIndexOverrides = new Map();
+      for (let i = 49; i < pdfQuestions.length && i < 200; i += 1) {
+        if (pdfFlatAnswerOverrides[i] !== null && pdfFlatAnswerOverrides[i] !== undefined) {
+          pdfQuestionIndexOverrides.set(i, pdfFlatAnswerOverrides[i]);
+        }
+      }
+      const pdfCorrectAnswers = pdfQuestions.map((question, index) => {
+        if (pdfQuestionIndexOverrides.has(index)) return pdfQuestionIndexOverrides.get(index);
+        const generated = pdfGeneratedAnswerRules.find(([pattern]) => pattern.test(question.text));
+        if (generated) return generated[1];
+        return inferPdfAnswerIndex(question, index);
+      });
+      let pdfCurrent = 0;
+      const pdfResponses = Array(pdfQuestions.length).fill(null);
+      const pdfQuestionText = document.getElementById("pdf-question-text");
+      const pdfQuestionNumber = document.getElementById("pdf-question-number");
+      const pdfQuestionCount = document.getElementById("pdf-question-count");
+      const pdfCategoryLabel = document.getElementById("pdf-category-label");
+      const pdfAnswers = document.getElementById("pdf-answers");
+      const pdfFeedback = document.getElementById("pdf-feedback");
+      const pdfNextButton = document.getElementById("pdf-next-btn");
+      const pdfPreviousButton = document.getElementById("pdf-previous-btn");
+      const pdfProgressFill = document.getElementById("pdf-progress-fill");
+      const pdfScoreValue = document.getElementById("pdf-score-value");
+      const pdfAnsweredValue = document.getElementById("pdf-answered-value");
+      const pdfRemainingValue = document.getElementById("pdf-remaining-value");
+      const pdfJumpGrid = document.getElementById("pdf-jump-grid");
+      const pdfQuestionCard = document.getElementById("pdf-question-card");
+      const pdfResults = document.getElementById("pdf-results");
+
+      function setActiveTab(tab) {
+        const showQuiz = tab === "quiz";
+        quizTabButton.classList.toggle("active", showQuiz);
+        pdfTabButton.classList.toggle("active", !showQuiz);
+        quizPanel.classList.toggle("active", showQuiz);
+        pdfPanel.classList.toggle("active", !showQuiz);
+      }
+
+      function pdfAnswered() {
+        return pdfResponses.filter((value) => value !== null).length;
+      }
+
+      function renderPdfStats() {
+        const done = pdfAnswered();
+        const correct = pdfResponses.filter(
+          (value, index) => value !== null && value === pdfCorrectAnswers[index],
+        ).length;
+        pdfScoreValue.textContent = correct;
+        pdfAnsweredValue.textContent = `${done} / ${pdfQuestions.length}`;
+        pdfRemainingValue.textContent = pdfQuestions.length - done;
+        pdfJumpGrid.querySelectorAll(".jump").forEach((button, index) => {
+          button.classList.toggle("current", index === pdfCurrent);
+          button.classList.toggle(
+            "done",
+            pdfResponses[index] !== null &&
+              pdfResponses[index] === pdfCorrectAnswers[index],
+          );
+          button.classList.toggle(
+            "wrong",
+            pdfResponses[index] !== null &&
+              pdfResponses[index] !== pdfCorrectAnswers[index],
+          );
+        });
+      }
+
+      function renderPdfQuiz() {
+        const item = pdfQuestions[pdfCurrent];
+        const response = pdfResponses[pdfCurrent];
+        pdfQuestionNumber.textContent = String(pdfCurrent + 1).padStart(2, "0");
+        pdfQuestionCount.textContent = `Question ${pdfCurrent + 1} of ${pdfQuestions.length}`;
+        pdfCategoryLabel.textContent = item.category;
+        pdfQuestionText.textContent = item.text;
+        pdfProgressFill.style.width = `${((pdfCurrent + 1) / pdfQuestions.length) * 100}%`;
+        pdfAnswers.innerHTML = "";
+        item.options.forEach((option, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer";
+          button.innerHTML = `<span class="answer-letter">${option.label}</span><span>${option.text}</span>`;
+          button.disabled = response !== null;
+          if (response !== null) {
+            if (index === pdfCorrectAnswers[pdfCurrent]) {
+              button.classList.add(
+                response === pdfCorrectAnswers[pdfCurrent] ? "correct" : "reveal",
+              );
+            }
+            if (index === response && response !== pdfCorrectAnswers[pdfCurrent]) {
+              button.classList.add("wrong");
+            }
+          }
+          button.addEventListener("click", () => {
+            if (pdfResponses[pdfCurrent] !== null) return;
+            pdfResponses[pdfCurrent] = index;
+            renderPdfQuiz();
+          });
+          pdfAnswers.appendChild(button);
+        });
+        pdfFeedback.className = "feedback";
+        if (response !== null) {
+          if (response === pdfCorrectAnswers[pdfCurrent]) {
+            pdfFeedback.textContent = `Correct. ${item.options[pdfCorrectAnswers[pdfCurrent]].label} is the best answer.`;
+            pdfFeedback.classList.add("good");
+          } else {
+            pdfFeedback.textContent = `Not quite. The correct answer is ${item.options[pdfCorrectAnswers[pdfCurrent]].label}.`;
+            pdfFeedback.classList.add("bad");
+          }
+        } else {
+          pdfFeedback.textContent = "Choose the strongest answer.";
+        }
+        pdfNextButton.disabled = response === null;
+        pdfNextButton.textContent =
+          pdfCurrent === pdfQuestions.length - 1 ? "See results" : "Next question";
+        pdfPreviousButton.disabled = pdfCurrent === 0;
+        renderPdfStats();
+      }
+
+      function showPdfResults() {
+        pdfQuestionCard.classList.add("hidden");
+        pdfResults.classList.add("visible");
+        const correct = pdfResponses.filter(
+          (value, index) => value !== null && value === pdfCorrectAnswers[index],
+        ).length;
+        pdfResultScore.textContent = `${Math.round((correct / pdfQuestions.length) * 100)}%`;
+        pdfResultTitle.textContent = "Your PDF quiz score is ready.";
+        pdfResultCopy.textContent =
+          `You answered ${correct} of ${pdfQuestions.length} imported questions correctly using inferred answers only.`;
+      }
+
+      function restartPdfQuiz() {
+        pdfResponses.fill(null);
+        pdfCurrent = 0;
+        pdfResults.classList.remove("visible");
+        pdfQuestionCard.classList.remove("hidden");
+        renderPdfQuiz();
+      }
+
+      const pdfResultScore = document.getElementById("pdf-result-score");
+      const pdfResultTitle = document.getElementById("pdf-result-title");
+      const pdfResultCopy = document.getElementById("pdf-result-copy");
+
+      pdfQuestions.forEach((question, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "jump";
+        button.textContent = index + 1;
+        button.title = `Go to PDF question ${index + 1} in ${question.category}`;
+        button.addEventListener("click", () => {
+          pdfCurrent = index;
+          renderPdfQuiz();
+        });
+        pdfJumpGrid.appendChild(button);
+      });
+
+      quizTabButton.addEventListener("click", () => setActiveTab("quiz"));
+      pdfTabButton.addEventListener("click", () => setActiveTab("pdf"));
+      pdfNextButton.addEventListener("click", () => {
+        if (pdfCurrent === pdfQuestions.length - 1) showPdfResults();
+        else {
+          pdfCurrent += 1;
+          renderPdfQuiz();
+        }
+      });
+      pdfPreviousButton.addEventListener("click", () => {
+        if (pdfCurrent > 0) {
+          pdfCurrent -= 1;
+          renderPdfQuiz();
+        }
+      });
+      document.getElementById("pdf-restart-btn").addEventListener("click", restartPdfQuiz);
+      renderPdfQuiz();
     </script>
   </body>
 </html>
