@@ -241,6 +241,29 @@
         gap: 22px;
         align-items: start;
       }
+      .pdf-subtab-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 22px;
+      }
+      .pdf-subtab {
+        border: 1px solid var(--line);
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--teal-dark);
+        cursor: pointer;
+        font:
+          700 0.72rem Arial,
+          sans-serif;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .pdf-subtab.active {
+        color: #fff;
+        border-color: var(--gold);
+        background: var(--gold);
+      }
       .pdf-progress-line {
         display: flex;
         justify-content: space-between;
@@ -540,9 +563,11 @@
 
       <section class="tab-panel" id="pdf-panel">
         <p class="bank-note">
-          Extracted from the readable CT PDF files in the source folder. You
-          can answer these questions one by one just like the main quiz.
+          Each tab below represents one source PDF from the CT folder. Select a
+          quiz, answer the questions one by one, and review the result for that
+          specific file.
         </p>
+        <div class="pdf-subtab-bar" id="pdf-source-tabs" role="tablist" aria-label="PDF source quizzes"></div>
         <div class="quiz-grid pdf-quiz-grid" id="pdf-quiz-view">
           <section class="panel main-panel">
             <div class="pdf-progress-line">
@@ -1134,6 +1159,16 @@
           const hasUsableOptions = Array.isArray(question.options) && question.options.length >= 2;
           return hasText && hasUsableOptions;
         });
+      const pdfSourceGroups = window.pdfQuestionBank
+        .map((group) => ({
+          ...group,
+          questions: pdfQuestions.filter((question) => question.sourceId === group.id),
+        }))
+        .filter((group) => group.questions.length > 0)
+        .map((group) => ({
+          ...group,
+          flatIndexes: group.questions.map((question) => pdfQuestions.indexOf(question)),
+        }));
       const pdfAnswerOverrides = {
         "40-exams-type-mcqs": {
           1: 1,
@@ -1480,9 +1515,86 @@
       const pdfManualAnswerMap = new Map();
       const pdfFlatAnswerOverrides = Array(200).fill(null);
       const pdfKnownPdfManualOverrides = new Map([
+        [49, 0],
         [50, 1],
         [51, 2],
+        [99, 0],
+        [100, 3],
+        [101, 2],
         [102, 1],
+        [103, 0],
+        [104, 1],
+        [105, 3],
+        [106, 2],
+        [107, 1],
+        [108, 3],
+        [109, 1],
+        [110, 3],
+        [111, 1],
+        [112, 3],
+        [113, 1],
+        [114, 3],
+        [115, 0],
+        [116, 3],
+        [117, 3],
+        [118, 3],
+        [119, 0],
+        [120, 2],
+        [121, 0],
+        [122, 2],
+        [123, 0],
+        [124, 3],
+        [125, 1],
+        [126, 2],
+        [127, 2],
+        [128, 3],
+        [129, 0],
+        [140, 1],
+        [141, 2],
+        [142, 1],
+        [143, 0],
+        [144, 1],
+        [145, 0],
+        [146, 2],
+        [147, 2],
+        [148, 1],
+        [149, 2],
+        [150, 1],
+        [151, 0],
+        [152, 3],
+        [153, 0],
+        [154, 0],
+        [155, 0],
+        [156, 1],
+        [157, 1],
+        [158, 0],
+        [159, 1],
+        [160, 1],
+        [161, 2],
+        [162, 1],
+        [163, 0],
+        [164, 0],
+        [165, 1],
+        [166, 0],
+        [167, 0],
+        [168, 0],
+        [169, 1],
+        [170, 1],
+        [171, 1],
+        [172, 1],
+        [173, 1],
+        [174, 1],
+        [175, 0],
+        [176, 2],
+        [177, 1],
+        [178, 0],
+        [179, 1],
+        [180, 1],
+        [181, 1],
+        [182, 1],
+        [183, 0],
+        [184, 0],
+        [185, 3],
       ]);
       for (const [index, answerIndex] of pdfKnownPdfManualOverrides) {
         pdfFlatAnswerOverrides[index] = answerIndex;
@@ -1499,6 +1611,7 @@
         if (generated) return generated[1];
         return inferPdfAnswerIndex(question, index);
       });
+      let pdfSourceIndex = 0;
       let pdfCurrent = 0;
       const pdfResponses = Array(pdfQuestions.length).fill(null);
       const pdfQuestionText = document.getElementById("pdf-question-text");
@@ -1516,6 +1629,7 @@
       const pdfJumpGrid = document.getElementById("pdf-jump-grid");
       const pdfQuestionCard = document.getElementById("pdf-question-card");
       const pdfResults = document.getElementById("pdf-results");
+      const pdfSourceTabs = document.getElementById("pdf-source-tabs");
 
       function setActiveTab(tab) {
         const showQuiz = tab === "quiz";
@@ -1525,41 +1639,92 @@
         pdfPanel.classList.toggle("active", !showQuiz);
       }
 
+      function currentPdfGroup() {
+        return pdfSourceGroups[pdfSourceIndex];
+      }
+
+      function currentPdfFlatIndex() {
+        const group = currentPdfGroup();
+        return group.flatIndexes[pdfCurrent];
+      }
+
+      function renderPdfSourceTabs() {
+        pdfSourceTabs.innerHTML = "";
+        pdfSourceGroups.forEach((group, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `pdf-subtab${index === pdfSourceIndex ? " active" : ""}`;
+          button.textContent = group.title;
+          button.title = `Open ${group.title}`;
+          button.addEventListener("click", () => {
+            pdfSourceIndex = index;
+            pdfCurrent = 0;
+            pdfResults.classList.remove("visible");
+            pdfQuestionCard.classList.remove("hidden");
+            renderPdfSourceTabs();
+            renderPdfQuiz();
+          });
+          pdfSourceTabs.appendChild(button);
+        });
+      }
+
+      function renderPdfJumpGrid() {
+        const group = currentPdfGroup();
+        pdfJumpGrid.innerHTML = "";
+        group.questions.forEach((question, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "jump";
+          button.textContent = index + 1;
+          button.title = `Go to question ${index + 1} in ${group.title}`;
+          button.addEventListener("click", () => {
+            pdfCurrent = index;
+            renderPdfQuiz();
+          });
+          pdfJumpGrid.appendChild(button);
+        });
+      }
+
       function pdfAnswered() {
-        return pdfResponses.filter((value) => value !== null).length;
+        const group = currentPdfGroup();
+        return group.flatIndexes.filter((flatIndex) => pdfResponses[flatIndex] !== null).length;
       }
 
       function renderPdfStats() {
-        const done = pdfAnswered();
-        const correct = pdfResponses.filter(
-          (value, index) => value !== null && value === pdfCorrectAnswers[index],
+        const group = currentPdfGroup();
+        const done = group.flatIndexes.filter((flatIndex) => pdfResponses[flatIndex] !== null).length;
+        const correct = group.flatIndexes.filter(
+          (flatIndex) => pdfResponses[flatIndex] !== null && pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
         ).length;
         pdfScoreValue.textContent = correct;
-        pdfAnsweredValue.textContent = `${done} / ${pdfQuestions.length}`;
-        pdfRemainingValue.textContent = pdfQuestions.length - done;
+        pdfAnsweredValue.textContent = `${done} / ${group.questions.length}`;
+        pdfRemainingValue.textContent = group.questions.length - done;
         pdfJumpGrid.querySelectorAll(".jump").forEach((button, index) => {
+          const flatIndex = group.flatIndexes[index];
           button.classList.toggle("current", index === pdfCurrent);
           button.classList.toggle(
             "done",
-            pdfResponses[index] !== null &&
-              pdfResponses[index] === pdfCorrectAnswers[index],
+            pdfResponses[flatIndex] !== null &&
+              pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
           );
           button.classList.toggle(
             "wrong",
-            pdfResponses[index] !== null &&
-              pdfResponses[index] !== pdfCorrectAnswers[index],
+            pdfResponses[flatIndex] !== null &&
+              pdfResponses[flatIndex] !== pdfCorrectAnswers[flatIndex],
           );
         });
       }
 
       function renderPdfQuiz() {
-        const item = pdfQuestions[pdfCurrent];
-        const response = pdfResponses[pdfCurrent];
+        const group = currentPdfGroup();
+        const flatIndex = currentPdfFlatIndex();
+        const item = pdfQuestions[flatIndex];
+        const response = pdfResponses[flatIndex];
         pdfQuestionNumber.textContent = String(pdfCurrent + 1).padStart(2, "0");
-        pdfQuestionCount.textContent = `Question ${pdfCurrent + 1} of ${pdfQuestions.length}`;
-        pdfCategoryLabel.textContent = item.category;
+        pdfQuestionCount.textContent = `Question ${pdfCurrent + 1} of ${group.questions.length}`;
+        pdfCategoryLabel.textContent = group.title;
         pdfQuestionText.textContent = item.text;
-        pdfProgressFill.style.width = `${((pdfCurrent + 1) / pdfQuestions.length) * 100}%`;
+        pdfProgressFill.style.width = `${((pdfCurrent + 1) / group.questions.length) * 100}%`;
         pdfAnswers.innerHTML = "";
         item.options.forEach((option, index) => {
           const button = document.createElement("button");
@@ -1568,29 +1733,29 @@
           button.innerHTML = `<span class="answer-letter">${option.label}</span><span>${option.text}</span>`;
           button.disabled = response !== null;
           if (response !== null) {
-            if (index === pdfCorrectAnswers[pdfCurrent]) {
+            if (index === pdfCorrectAnswers[flatIndex]) {
               button.classList.add(
-                response === pdfCorrectAnswers[pdfCurrent] ? "correct" : "reveal",
+                response === pdfCorrectAnswers[flatIndex] ? "correct" : "reveal",
               );
             }
-            if (index === response && response !== pdfCorrectAnswers[pdfCurrent]) {
+            if (index === response && response !== pdfCorrectAnswers[flatIndex]) {
               button.classList.add("wrong");
             }
           }
           button.addEventListener("click", () => {
-            if (pdfResponses[pdfCurrent] !== null) return;
-            pdfResponses[pdfCurrent] = index;
+            if (pdfResponses[flatIndex] !== null) return;
+            pdfResponses[flatIndex] = index;
             renderPdfQuiz();
           });
           pdfAnswers.appendChild(button);
         });
         pdfFeedback.className = "feedback";
         if (response !== null) {
-          if (response === pdfCorrectAnswers[pdfCurrent]) {
-            pdfFeedback.textContent = `Correct. ${item.options[pdfCorrectAnswers[pdfCurrent]].label} is the best answer.`;
+          if (response === pdfCorrectAnswers[flatIndex]) {
+            pdfFeedback.textContent = `Correct. ${item.options[pdfCorrectAnswers[flatIndex]].label} is the best answer.`;
             pdfFeedback.classList.add("good");
           } else {
-            pdfFeedback.textContent = `Not quite. The correct answer is ${item.options[pdfCorrectAnswers[pdfCurrent]].label}.`;
+            pdfFeedback.textContent = `Not quite. The correct answer is ${item.options[pdfCorrectAnswers[flatIndex]].label}.`;
             pdfFeedback.classList.add("bad");
           }
         } else {
@@ -1598,25 +1763,30 @@
         }
         pdfNextButton.disabled = response === null;
         pdfNextButton.textContent =
-          pdfCurrent === pdfQuestions.length - 1 ? "See results" : "Next question";
+          pdfCurrent === group.questions.length - 1 ? "See results" : "Next question";
         pdfPreviousButton.disabled = pdfCurrent === 0;
+        renderPdfJumpGrid();
         renderPdfStats();
       }
 
       function showPdfResults() {
+        const group = currentPdfGroup();
         pdfQuestionCard.classList.add("hidden");
         pdfResults.classList.add("visible");
-        const correct = pdfResponses.filter(
-          (value, index) => value !== null && value === pdfCorrectAnswers[index],
+        const correct = group.flatIndexes.filter(
+          (flatIndex) => pdfResponses[flatIndex] !== null && pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
         ).length;
-        pdfResultScore.textContent = `${Math.round((correct / pdfQuestions.length) * 100)}%`;
-        pdfResultTitle.textContent = "Your PDF quiz score is ready.";
+        pdfResultScore.textContent = `${Math.round((correct / group.questions.length) * 100)}%`;
+        pdfResultTitle.textContent = `Results for ${group.title}`;
         pdfResultCopy.textContent =
-          `You answered ${correct} of ${pdfQuestions.length} imported questions correctly using inferred answers only.`;
+          `You answered ${correct} of ${group.questions.length} questions correctly in ${group.title}.`;
       }
 
       function restartPdfQuiz() {
-        pdfResponses.fill(null);
+        const group = currentPdfGroup();
+        group.flatIndexes.forEach((flatIndex) => {
+          pdfResponses[flatIndex] = null;
+        });
         pdfCurrent = 0;
         pdfResults.classList.remove("visible");
         pdfQuestionCard.classList.remove("hidden");
@@ -1627,23 +1797,11 @@
       const pdfResultTitle = document.getElementById("pdf-result-title");
       const pdfResultCopy = document.getElementById("pdf-result-copy");
 
-      pdfQuestions.forEach((question, index) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "jump";
-        button.textContent = index + 1;
-        button.title = `Go to PDF question ${index + 1} in ${question.category}`;
-        button.addEventListener("click", () => {
-          pdfCurrent = index;
-          renderPdfQuiz();
-        });
-        pdfJumpGrid.appendChild(button);
-      });
-
       quizTabButton.addEventListener("click", () => setActiveTab("quiz"));
       pdfTabButton.addEventListener("click", () => setActiveTab("pdf"));
       pdfNextButton.addEventListener("click", () => {
-        if (pdfCurrent === pdfQuestions.length - 1) showPdfResults();
+        const group = currentPdfGroup();
+        if (pdfCurrent === group.questions.length - 1) showPdfResults();
         else {
           pdfCurrent += 1;
           renderPdfQuiz();
@@ -1656,6 +1814,7 @@
         }
       });
       document.getElementById("pdf-restart-btn").addEventListener("click", restartPdfQuiz);
+      renderPdfSourceTabs();
       renderPdfQuiz();
     </script>
   </body>
