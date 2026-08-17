@@ -1600,16 +1600,25 @@
         pdfFlatAnswerOverrides[index] = answerIndex;
       }
       const pdfQuestionIndexOverrides = new Map();
-      for (let i = 49; i < pdfQuestions.length && i < 200; i += 1) {
-        if (pdfFlatAnswerOverrides[i] !== null && pdfFlatAnswerOverrides[i] !== undefined) {
-          pdfQuestionIndexOverrides.set(i, pdfFlatAnswerOverrides[i]);
+      pdfQuestions.forEach((question, index) => {
+        const groupOverrides = pdfAnswerOverrides[question.sourceId];
+        if (
+          groupOverrides &&
+          Object.prototype.hasOwnProperty.call(groupOverrides, question.sourceNumber)
+        ) {
+          pdfQuestionIndexOverrides.set(index, groupOverrides[question.sourceNumber]);
+        }
+      });
+      for (const [index, answerIndex] of pdfKnownPdfManualOverrides) {
+        if (pdfQuestions[index] !== undefined) {
+          pdfQuestionIndexOverrides.set(index, answerIndex);
         }
       }
       const pdfCorrectAnswers = pdfQuestions.map((question, index) => {
         if (pdfQuestionIndexOverrides.has(index)) return pdfQuestionIndexOverrides.get(index);
         const generated = pdfGeneratedAnswerRules.find(([pattern]) => pattern.test(question.text));
         if (generated) return generated[1];
-        return inferPdfAnswerIndex(question, index);
+        return null;
       });
       let pdfSourceIndex = 0;
       let pdfCurrent = 0;
@@ -1694,23 +1703,32 @@
         const group = currentPdfGroup();
         const done = group.flatIndexes.filter((flatIndex) => pdfResponses[flatIndex] !== null).length;
         const correct = group.flatIndexes.filter(
-          (flatIndex) => pdfResponses[flatIndex] !== null && pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
+          (flatIndex) =>
+            pdfResponses[flatIndex] !== null &&
+            pdfCorrectAnswers[flatIndex] !== null &&
+            pdfCorrectAnswers[flatIndex] !== undefined &&
+            pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
         ).length;
         pdfScoreValue.textContent = correct;
         pdfAnsweredValue.textContent = `${done} / ${group.questions.length}`;
         pdfRemainingValue.textContent = group.questions.length - done;
         pdfJumpGrid.querySelectorAll(".jump").forEach((button, index) => {
           const flatIndex = group.flatIndexes[index];
+          const expected = pdfCorrectAnswers[flatIndex];
           button.classList.toggle("current", index === pdfCurrent);
           button.classList.toggle(
             "done",
             pdfResponses[flatIndex] !== null &&
-              pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
+              expected !== null &&
+              expected !== undefined &&
+              pdfResponses[flatIndex] === expected,
           );
           button.classList.toggle(
             "wrong",
             pdfResponses[flatIndex] !== null &&
-              pdfResponses[flatIndex] !== pdfCorrectAnswers[flatIndex],
+              expected !== null &&
+              expected !== undefined &&
+              pdfResponses[flatIndex] !== expected,
           );
         });
       }
@@ -1720,6 +1738,7 @@
         const flatIndex = currentPdfFlatIndex();
         const item = pdfQuestions[flatIndex];
         const response = pdfResponses[flatIndex];
+        const expected = pdfCorrectAnswers[flatIndex];
         pdfQuestionNumber.textContent = String(pdfCurrent + 1).padStart(2, "0");
         pdfQuestionCount.textContent = `Question ${pdfCurrent + 1} of ${group.questions.length}`;
         pdfCategoryLabel.textContent = group.title;
@@ -1733,13 +1752,15 @@
           button.innerHTML = `<span class="answer-letter">${option.label}</span><span>${option.text}</span>`;
           button.disabled = response !== null;
           if (response !== null) {
-            if (index === pdfCorrectAnswers[flatIndex]) {
-              button.classList.add(
-                response === pdfCorrectAnswers[flatIndex] ? "correct" : "reveal",
-              );
-            }
-            if (index === response && response !== pdfCorrectAnswers[flatIndex]) {
-              button.classList.add("wrong");
+            if (expected !== null && expected !== undefined) {
+              if (index === expected) {
+                button.classList.add(
+                  response === expected ? "correct" : "reveal",
+                );
+              }
+              if (index === response && response !== expected) {
+                button.classList.add("wrong");
+              }
             }
           }
           button.addEventListener("click", () => {
@@ -1751,12 +1772,16 @@
         });
         pdfFeedback.className = "feedback";
         if (response !== null) {
-          if (response === pdfCorrectAnswers[flatIndex]) {
-            pdfFeedback.textContent = `Correct. ${item.options[pdfCorrectAnswers[flatIndex]].label} is the best answer.`;
-            pdfFeedback.classList.add("good");
+          if (expected !== null && expected !== undefined) {
+            if (response === expected) {
+              pdfFeedback.textContent = `Correct. ${item.options[expected].label} is the best answer.`;
+              pdfFeedback.classList.add("good");
+            } else {
+              pdfFeedback.textContent = `Not quite. The correct answer is ${item.options[expected].label}.`;
+              pdfFeedback.classList.add("bad");
+            }
           } else {
-            pdfFeedback.textContent = `Not quite. The correct answer is ${item.options[pdfCorrectAnswers[flatIndex]].label}.`;
-            pdfFeedback.classList.add("bad");
+            pdfFeedback.textContent = "Your selection is recorded. This item is still awaiting source verification, so it is not marked wrong yet.";
           }
         } else {
           pdfFeedback.textContent = "Choose the strongest answer.";
@@ -1773,13 +1798,19 @@
         const group = currentPdfGroup();
         pdfQuestionCard.classList.add("hidden");
         pdfResults.classList.add("visible");
-        const correct = group.flatIndexes.filter(
+        const verifiedQuestions = group.flatIndexes.filter(
+          (flatIndex) => pdfCorrectAnswers[flatIndex] !== null && pdfCorrectAnswers[flatIndex] !== undefined,
+        );
+        const correct = verifiedQuestions.filter(
           (flatIndex) => pdfResponses[flatIndex] !== null && pdfResponses[flatIndex] === pdfCorrectAnswers[flatIndex],
         ).length;
-        pdfResultScore.textContent = `${Math.round((correct / group.questions.length) * 100)}%`;
+        const percent = verifiedQuestions.length ? Math.round((correct / verifiedQuestions.length) * 100) : 0;
+        pdfResultScore.textContent = `${percent}%`;
         pdfResultTitle.textContent = `Results for ${group.title}`;
         pdfResultCopy.textContent =
-          `You answered ${correct} of ${group.questions.length} questions correctly in ${group.title}.`;
+          verifiedQuestions.length
+            ? `You answered ${correct} of ${verifiedQuestions.length} verified questions correctly in ${group.title}. Unverified items are excluded from the score.`
+            : `This set has no source-verified answers yet, so the score is held back until the answer key is checked.`;
       }
 
       function restartPdfQuiz() {
