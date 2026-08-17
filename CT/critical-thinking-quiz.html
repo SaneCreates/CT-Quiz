@@ -1127,6 +1127,111 @@
           options: question.options,
         })),
       );
+      function normalizeText(value) {
+        return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      }
+      function scoreOption(optionText, hints) {
+        const text = normalizeText(optionText);
+        return hints.reduce((total, hint) => total + (text.includes(hint) ? 1 : 0), 0);
+      }
+      function inferPdfAnswerIndex(question) {
+        const stem = normalizeText(question.text);
+        const options = question.options.map((option) => normalizeText(option.text));
+        const pickByOptionHints = (hints) => {
+          let bestIndex = 0;
+          let bestScore = -1;
+          options.forEach((optionText, index) => {
+            const score = scoreOption(optionText, hints);
+            if (score > bestScore) {
+              bestScore = score;
+              bestIndex = index;
+            }
+          });
+          return bestIndex;
+        };
+        const rules = [
+          [/best define[s]? critical thinking|best definition of critical thinking/, ["analyzing evaluating information", "intellectually disciplined process"]],
+          [/what is the first step in the critical thinking process/, ["gathering information"]],
+          [/what is integrated thought/, ["combining different perspectives and disciplines", "drawing upon knowledge from various disciplines"]],
+          [/what role does scepticism play in critical thinking/, ["questioning and deeper investigation"]],
+          [/sign of strong critical thinking/, ["questioning assumptions"]],
+          [/not a characteristic of a critical thinker/, ["rigid thinking", "accepting all information", "refusing to recognize the limitations"]],
+          [/main goal of evaluating the credibility of a claim|evaluating the credibility of a claim/, ["determine if it can be trusted"]],
+          [/what is credibility|credibility depends primarily|trustworthiness|assessing credibility/, ["qualifications", "expertise", "trustworthiness", "independent sources"]],
+          [/what is the purpose of rhetorical devices|rhetorical devices/, ["persuade", "communicate effectively", "simplify complex ideas"]],
+          [/which component of critical thinking involves breaking down complex ideas/, ["analysis"]],
+          [/which component of critical thinking/, ["analysis"]],
+          [/important in engineering/, ["problem solving", "decision making"]],
+          [/critical thinking helps individuals to/, ["think clearly and rationally"]],
+          [/why is critical thinking important in engineering/, ["problem solving", "decision making"]],
+          [/best defines critical thinking is/, ["analyzing evaluating information"]],
+          [/what is the core essence of critical thinking/, ["asking probing questions", "seeking answers"]],
+          [/a claim about material properties .* always credible/, ["false"]],
+          [/deductive reasoning starts with/, ["general premises"]],
+          [/inductive reasoning/, ["draws probable generalizations", "specific examples", "specific tests"]],
+          [/abductive reasoning/, ["diagnosing", "incomplete data"]],
+          [/ad hominem/, ["attacking the person instead of the argument"]],
+          [/slippery slope/, ["one event is said to lead to a chain of bad events", "one step will inevitably lead to extreme outcomes"]],
+          [/false dilemma/, ["only two options when more possibilities exist"]],
+          [/hasty generalization/, ["draws a broad conclusion from too few", "unrepresentative examples"]],
+          [/appeal to authority/, ["status as proof", "qualified on this exact question"]],
+          [/circular reasoning/, ["conclusion is assumed in the supporting reason", "repeat the conclusion"]],
+          [/red herring/, ["irrelevant issue to distract"]],
+          [/correlation and causation/, ["causal mechanism", "proof of cause"]],
+          [/metacognition/, ["monitoring and evaluating one s own thinking"]],
+          [/intellectual humility/, ["recognize limits", "admit uncertainty"]],
+          [/open-mindedness/, ["consider relevant alternatives"]],
+          [/problem definition/, ["stating what issue must actually be solved"]],
+          [/source credibility/, ["trustworthy", "qualified", "transparent", "relevant"]],
+          [/triangulation/, ["different sources", "methods", "perspectives"]],
+          [/confirmation bias/, ["challenge my current view"]],
+          [/availability bias/, ["memory vividness", "rather than data"]],
+          [/anchoring bias/, ["first figure", "initial number"]],
+          [/logic/, ["fit together without contradiction"]],
+          [/claim/, ["statement that asserts something"]],
+          [/reason/, ["offered to support"]],
+          [/conclusion/, ["judgment or position"]],
+          [/argument/, ["connected set of reasons"]],
+          [/premise/, ["starting statement"]],
+          [/validity/, ["if the premises were true"]],
+          [/soundness/, ["valid reasoning and true premises"]],
+          [/inference/, ["conclusion drawn from evidence"]],
+          [/implication/, ["likely effect", "consequence", "meaning that follows"]],
+          [/evidence/, ["information used to support", "challenge", "assess a claim"]],
+          [/bias/, ["favor information", "existing belief"]],
+          [/fairness/, ["same rule", "consistently without favoritism"]],
+          [/assumption/, ["unstated belief"]],
+        ];
+        for (const [pattern, hints] of rules) {
+          if (pattern.test(stem)) return pickByOptionHints(hints);
+        }
+        const weightedHints = [
+          ["analyzing", 2],
+          ["evaluating", 2],
+          ["understanding", 1],
+          ["problem solving", 1],
+          ["decision making", 1],
+          ["trust", 1],
+          ["evidence", 1],
+          ["questioning", 1],
+        ];
+        let bestIndex = 0;
+        let bestScore = -1;
+        options.forEach((optionText, index) => {
+          const score = weightedHints.reduce(
+            (total, [hint, weight]) => total + (optionText.includes(hint) ? weight : 0),
+            0,
+          );
+          if (score > bestScore) {
+            bestScore = score;
+            bestIndex = index;
+          }
+        });
+        return bestIndex;
+      }
+      const pdfCorrectAnswers = pdfQuestions.map((question) =>
+        inferPdfAnswerIndex(question),
+      );
       let pdfCurrent = 0;
       const pdfResponses = Array(pdfQuestions.length).fill(null);
       const pdfQuestionText = document.getElementById("pdf-question-text");
@@ -1159,12 +1264,24 @@
 
       function renderPdfStats() {
         const done = pdfAnswered();
-        pdfScoreValue.textContent = done;
+        const correct = pdfResponses.filter(
+          (value, index) => value !== null && value === pdfCorrectAnswers[index],
+        ).length;
+        pdfScoreValue.textContent = correct;
         pdfAnsweredValue.textContent = `${done} / ${pdfQuestions.length}`;
         pdfRemainingValue.textContent = pdfQuestions.length - done;
         pdfJumpGrid.querySelectorAll(".jump").forEach((button, index) => {
           button.classList.toggle("current", index === pdfCurrent);
-          button.classList.toggle("done", pdfResponses[index] !== null);
+          button.classList.toggle(
+            "done",
+            pdfResponses[index] !== null &&
+              pdfResponses[index] === pdfCorrectAnswers[index],
+          );
+          button.classList.toggle(
+            "wrong",
+            pdfResponses[index] !== null &&
+              pdfResponses[index] !== pdfCorrectAnswers[index],
+          );
         });
       }
 
@@ -1183,7 +1300,16 @@
           button.className = "answer";
           button.innerHTML = `<span class="answer-letter">${option.label}</span><span>${option.text}</span>`;
           button.disabled = response !== null;
-          if (response !== null && index === response) button.classList.add("reveal");
+          if (response !== null) {
+            if (index === pdfCorrectAnswers[pdfCurrent]) {
+              button.classList.add(
+                response === pdfCorrectAnswers[pdfCurrent] ? "correct" : "reveal",
+              );
+            }
+            if (index === response && response !== pdfCorrectAnswers[pdfCurrent]) {
+              button.classList.add("wrong");
+            }
+          }
           button.addEventListener("click", () => {
             if (pdfResponses[pdfCurrent] !== null) return;
             pdfResponses[pdfCurrent] = index;
@@ -1193,8 +1319,13 @@
         });
         pdfFeedback.className = "feedback";
         if (response !== null) {
-          pdfFeedback.textContent = `Selected ${item.options[response].label}.`;
-          pdfFeedback.classList.add("good");
+          if (response === pdfCorrectAnswers[pdfCurrent]) {
+            pdfFeedback.textContent = `Correct. ${item.options[pdfCorrectAnswers[pdfCurrent]].label} is the best answer.`;
+            pdfFeedback.classList.add("good");
+          } else {
+            pdfFeedback.textContent = `Not quite. The correct answer is ${item.options[pdfCorrectAnswers[pdfCurrent]].label}.`;
+            pdfFeedback.classList.add("bad");
+          }
         } else {
           pdfFeedback.textContent = "Choose the strongest answer.";
         }
@@ -1208,14 +1339,13 @@
       function showPdfResults() {
         pdfQuestionCard.classList.add("hidden");
         pdfResults.classList.add("visible");
-        const done = pdfAnswered();
-        pdfResultScore.textContent = `${Math.round((done / pdfQuestions.length) * 100)}%`;
-        pdfResultTitle.textContent =
-          done === pdfQuestions.length
-            ? "You have answered the imported set."
-            : "You have started the imported set.";
+        const correct = pdfResponses.filter(
+          (value, index) => value !== null && value === pdfCorrectAnswers[index],
+        ).length;
+        pdfResultScore.textContent = `${Math.round((correct / pdfQuestions.length) * 100)}%`;
+        pdfResultTitle.textContent = "Your PDF quiz score is ready.";
         pdfResultCopy.textContent =
-          `You selected answers for ${done} of ${pdfQuestions.length} imported questions.`;
+          `You answered ${correct} of ${pdfQuestions.length} imported questions correctly.`;
       }
 
       function restartPdfQuiz() {
