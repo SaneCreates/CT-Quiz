@@ -196,6 +196,95 @@
         gap: 12px;
         margin-top: 30px;
       }
+      .tab-bar {
+        display: flex;
+        gap: 10px;
+        margin: 18px 0 22px;
+      }
+      .tab {
+        border: 1px solid var(--line);
+        padding: 12px 16px;
+        color: var(--teal-dark);
+        background: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font:
+          700 0.78rem Arial,
+          sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .tab.active {
+        color: #fff;
+        border-color: var(--teal);
+        background: var(--teal);
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+      .bank-panel {
+        padding: clamp(22px, 4vw, 48px);
+      }
+      .bank-note {
+        max-width: 760px;
+        margin: 0 0 22px;
+        color: var(--muted);
+        font:
+          0.92rem/1.5 Arial,
+          sans-serif;
+      }
+      .pdf-quiz-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 22px;
+        align-items: start;
+      }
+      .pdf-progress-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font:
+          700 0.78rem Arial,
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .pdf-progress-track {
+        height: 8px;
+        margin: 12px 0 40px;
+        overflow: hidden;
+        background: #e3ded5;
+      }
+      .pdf-progress-fill {
+        width: 0.5%;
+        height: 100%;
+        background: var(--gold);
+        transition: width 0.25s ease;
+      }
+      .pdf-question-number {
+        color: var(--teal);
+        font:
+          700 1rem Arial,
+          sans-serif;
+      }
+      .pdf-result-copy {
+        max-width: 540px;
+        margin: 18px auto 28px;
+        color: var(--muted);
+        font:
+          1rem/1.55 Arial,
+          sans-serif;
+      }
+      .pdf-answering-note {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font:
+          0.88rem/1.5 Arial,
+          sans-serif;
+      }
       .btn {
         border: 0;
         padding: 13px 18px;
@@ -373,72 +462,155 @@
           <h1>Make the reasoning visible.</h1>
         </div>
         <p class="deck-note">
-          200 multiple-choice questions built around core concepts, standards,
-          arguments, evidence, assumptions, bias, and reasoning errors.
+          200 multiple-choice questions for the main quiz, plus a PDF question
+          bank extracted from the source files in the CT folder.
         </p>
       </header>
 
-      <div class="quiz-grid" id="quiz-view">
-        <section class="panel main-panel" aria-live="polite">
-          <div class="progress-line">
-            <span id="question-count">Question 1 of 200</span
-            ><span id="category-label">Foundations</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <div id="question-card">
-            <div class="question-number" id="question-number">01</div>
-            <h2 id="question-text"></h2>
-            <div class="answers" id="answers"></div>
-            <p class="feedback" id="feedback" aria-live="assertive"></p>
-            <div class="controls">
-              <button class="btn btn-quiet" id="previous-btn" type="button">
-                Previous
-              </button>
-              <button
-                class="btn btn-primary"
-                id="next-btn"
-                type="button"
-                disabled
-              >
-                Next question
-              </button>
-            </div>
-          </div>
-          <div class="results" id="results">
-            <div class="kicker">Assessment complete</div>
-            <div class="result-score" id="result-score">0%</div>
-            <h2 id="result-title">Your reasoning profile is ready.</h2>
-            <p class="result-copy" id="result-copy"></p>
-            <button class="btn btn-primary" id="restart-btn" type="button">
-              Restart quiz
-            </button>
-          </div>
-        </section>
-
-        <aside class="panel side-panel">
-          <h2 class="side-title">Your progress</h2>
-          <div class="score">
-            <strong id="score-value">0</strong><span>correct so far</span>
-          </div>
-          <div class="stat-list">
-            <div class="stat">
-              <span>Answered</span><strong id="answered-value">0 / 200</strong>
-            </div>
-            <div class="stat">
-              <span>Accuracy</span><strong id="accuracy-value">0%</strong>
-            </div>
-            <div class="stat">
-              <span>Unanswered</span><strong id="remaining-value">200</strong>
-            </div>
-          </div>
-          <h2 class="side-title">Jump to question</h2>
-          <div class="jump-grid" id="jump-grid"></div>
-        </aside>
+      <div class="tab-bar" role="tablist" aria-label="Quiz sections">
+        <button class="tab active" id="quiz-tab-btn" type="button">
+          Generated quiz
+        </button>
+        <button class="tab" id="pdf-tab-btn" type="button">
+          PDF questions
+        </button>
       </div>
+
+      <section class="tab-panel active" id="quiz-panel" aria-live="polite">
+        <div class="quiz-grid" id="quiz-view">
+          <section class="panel main-panel">
+            <div class="progress-line">
+              <span id="question-count">Question 1 of 200</span
+              ><span id="category-label">Foundations</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="question-card">
+              <div class="question-number" id="question-number">01</div>
+              <h2 id="question-text"></h2>
+              <div class="answers" id="answers"></div>
+              <p class="feedback" id="feedback" aria-live="assertive"></p>
+              <div class="controls">
+                <button class="btn btn-quiet" id="previous-btn" type="button">
+                  Previous
+                </button>
+                <button
+                  class="btn btn-primary"
+                  id="next-btn"
+                  type="button"
+                  disabled
+                >
+                  Next question
+                </button>
+              </div>
+            </div>
+            <div class="results" id="results">
+              <div class="kicker">Assessment complete</div>
+              <div class="result-score" id="result-score">0%</div>
+              <h2 id="result-title">Your reasoning profile is ready.</h2>
+              <p class="result-copy" id="result-copy"></p>
+              <button class="btn btn-primary" id="restart-btn" type="button">
+                Restart quiz
+              </button>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <h2 class="side-title">Your progress</h2>
+            <div class="score">
+              <strong id="score-value">0</strong><span>correct so far</span>
+            </div>
+            <div class="stat-list">
+              <div class="stat">
+                <span>Answered</span><strong id="answered-value">0 / 200</strong>
+              </div>
+              <div class="stat">
+                <span>Accuracy</span><strong id="accuracy-value">0%</strong>
+              </div>
+              <div class="stat">
+                <span>Unanswered</span><strong id="remaining-value">200</strong>
+              </div>
+            </div>
+            <h2 class="side-title">Jump to question</h2>
+            <div class="jump-grid" id="jump-grid"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="pdf-panel">
+        <p class="bank-note">
+          Extracted from the readable CT PDF files in the source folder. You
+          can answer these questions one by one just like the main quiz.
+        </p>
+        <div class="quiz-grid pdf-quiz-grid" id="pdf-quiz-view">
+          <section class="panel main-panel">
+            <div class="pdf-progress-line">
+              <span id="pdf-question-count">Question 1 of 200</span>
+              <span id="pdf-category-label">40 Exams Type Mcqs</span>
+            </div>
+            <div class="pdf-progress-track">
+              <div class="pdf-progress-fill" id="pdf-progress-fill"></div>
+            </div>
+            <div id="pdf-question-card">
+              <div class="pdf-question-number" id="pdf-question-number">01</div>
+              <h2 id="pdf-question-text"></h2>
+              <p class="pdf-answering-note" id="pdf-answering-note">
+                Choose the strongest answer.
+              </p>
+              <div class="answers" id="pdf-answers"></div>
+              <p class="feedback" id="pdf-feedback" aria-live="assertive"></p>
+              <div class="controls">
+                <button
+                  class="btn btn-quiet"
+                  id="pdf-previous-btn"
+                  type="button"
+                >
+                  Previous
+                </button>
+                <button
+                  class="btn btn-primary"
+                  id="pdf-next-btn"
+                  type="button"
+                  disabled
+                >
+                  Next question
+                </button>
+              </div>
+            </div>
+            <div class="results" id="pdf-results">
+              <div class="kicker">PDF quiz complete</div>
+              <div class="result-score" id="pdf-result-score">200</div>
+              <h2 id="pdf-result-title">You have answered the imported set.</h2>
+              <p class="pdf-result-copy" id="pdf-result-copy"></p>
+              <button class="btn btn-primary" id="pdf-restart-btn" type="button">
+                Restart PDF quiz
+              </button>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <h2 class="side-title">PDF quiz progress</h2>
+            <div class="score">
+              <strong id="pdf-score-value">0</strong>
+              <span>answered so far</span>
+            </div>
+            <div class="stat-list">
+              <div class="stat">
+                <span>Answered</span><strong id="pdf-answered-value">0 / 200</strong>
+              </div>
+              <div class="stat">
+                <span>Remaining</span><strong id="pdf-remaining-value">200</strong>
+              </div>
+            </div>
+            <h2 class="side-title">Jump to question</h2>
+            <div class="jump-grid" id="pdf-jump-grid"></div>
+          </aside>
+        </div>
+      </section>
     </main>
 
+    <script src="pdf-question-bank.js"></script>
     <script>
       const concepts = [
         [
@@ -831,7 +1003,7 @@
         answeredValue.textContent = `${done} / ${questions.length}`;
         accuracyValue.textContent = `${done ? Math.round((correct / done) * 100) : 0}%`;
         remainingValue.textContent = questions.length - done;
-        document.querySelectorAll(".jump").forEach((button, index) => {
+        jumpGrid.querySelectorAll(".jump").forEach((button, index) => {
           button.classList.toggle("current", index === current);
           button.classList.toggle(
             "done",
@@ -940,6 +1112,154 @@
         jumpGrid.appendChild(button);
       });
       render();
+    </script>
+    <script>
+      const quizTabButton = document.getElementById("quiz-tab-btn");
+      const pdfTabButton = document.getElementById("pdf-tab-btn");
+      const quizPanel = document.getElementById("quiz-panel");
+      const pdfPanel = document.getElementById("pdf-panel");
+      const pdfQuestions = window.pdfQuestionBank.flatMap((group) =>
+        group.questions.map((question) => ({
+          sourceNumber: question.number,
+          category: group.title,
+          sourceId: group.id,
+          text: question.stem,
+          options: question.options,
+        })),
+      );
+      let pdfCurrent = 0;
+      const pdfResponses = Array(pdfQuestions.length).fill(null);
+      const pdfQuestionText = document.getElementById("pdf-question-text");
+      const pdfQuestionNumber = document.getElementById("pdf-question-number");
+      const pdfQuestionCount = document.getElementById("pdf-question-count");
+      const pdfCategoryLabel = document.getElementById("pdf-category-label");
+      const pdfAnswers = document.getElementById("pdf-answers");
+      const pdfFeedback = document.getElementById("pdf-feedback");
+      const pdfNextButton = document.getElementById("pdf-next-btn");
+      const pdfPreviousButton = document.getElementById("pdf-previous-btn");
+      const pdfProgressFill = document.getElementById("pdf-progress-fill");
+      const pdfScoreValue = document.getElementById("pdf-score-value");
+      const pdfAnsweredValue = document.getElementById("pdf-answered-value");
+      const pdfRemainingValue = document.getElementById("pdf-remaining-value");
+      const pdfJumpGrid = document.getElementById("pdf-jump-grid");
+      const pdfQuestionCard = document.getElementById("pdf-question-card");
+      const pdfResults = document.getElementById("pdf-results");
+
+      function setActiveTab(tab) {
+        const showQuiz = tab === "quiz";
+        quizTabButton.classList.toggle("active", showQuiz);
+        pdfTabButton.classList.toggle("active", !showQuiz);
+        quizPanel.classList.toggle("active", showQuiz);
+        pdfPanel.classList.toggle("active", !showQuiz);
+      }
+
+      function pdfAnswered() {
+        return pdfResponses.filter((value) => value !== null).length;
+      }
+
+      function renderPdfStats() {
+        const done = pdfAnswered();
+        pdfScoreValue.textContent = done;
+        pdfAnsweredValue.textContent = `${done} / ${pdfQuestions.length}`;
+        pdfRemainingValue.textContent = pdfQuestions.length - done;
+        pdfJumpGrid.querySelectorAll(".jump").forEach((button, index) => {
+          button.classList.toggle("current", index === pdfCurrent);
+          button.classList.toggle("done", pdfResponses[index] !== null);
+        });
+      }
+
+      function renderPdfQuiz() {
+        const item = pdfQuestions[pdfCurrent];
+        const response = pdfResponses[pdfCurrent];
+        pdfQuestionNumber.textContent = String(pdfCurrent + 1).padStart(2, "0");
+        pdfQuestionCount.textContent = `Question ${pdfCurrent + 1} of ${pdfQuestions.length}`;
+        pdfCategoryLabel.textContent = item.category;
+        pdfQuestionText.textContent = item.text;
+        pdfProgressFill.style.width = `${((pdfCurrent + 1) / pdfQuestions.length) * 100}%`;
+        pdfAnswers.innerHTML = "";
+        item.options.forEach((option, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer";
+          button.innerHTML = `<span class="answer-letter">${option.label}</span><span>${option.text}</span>`;
+          button.disabled = response !== null;
+          if (response !== null && index === response) button.classList.add("reveal");
+          button.addEventListener("click", () => {
+            if (pdfResponses[pdfCurrent] !== null) return;
+            pdfResponses[pdfCurrent] = index;
+            renderPdfQuiz();
+          });
+          pdfAnswers.appendChild(button);
+        });
+        pdfFeedback.className = "feedback";
+        if (response !== null) {
+          pdfFeedback.textContent = `Selected ${item.options[response].label}.`;
+          pdfFeedback.classList.add("good");
+        } else {
+          pdfFeedback.textContent = "Choose the strongest answer.";
+        }
+        pdfNextButton.disabled = response === null;
+        pdfNextButton.textContent =
+          pdfCurrent === pdfQuestions.length - 1 ? "See results" : "Next question";
+        pdfPreviousButton.disabled = pdfCurrent === 0;
+        renderPdfStats();
+      }
+
+      function showPdfResults() {
+        pdfQuestionCard.classList.add("hidden");
+        pdfResults.classList.add("visible");
+        const done = pdfAnswered();
+        pdfResultScore.textContent = `${Math.round((done / pdfQuestions.length) * 100)}%`;
+        pdfResultTitle.textContent =
+          done === pdfQuestions.length
+            ? "You have answered the imported set."
+            : "You have started the imported set.";
+        pdfResultCopy.textContent =
+          `You selected answers for ${done} of ${pdfQuestions.length} imported questions.`;
+      }
+
+      function restartPdfQuiz() {
+        pdfResponses.fill(null);
+        pdfCurrent = 0;
+        pdfResults.classList.remove("visible");
+        pdfQuestionCard.classList.remove("hidden");
+        renderPdfQuiz();
+      }
+
+      const pdfResultScore = document.getElementById("pdf-result-score");
+      const pdfResultTitle = document.getElementById("pdf-result-title");
+      const pdfResultCopy = document.getElementById("pdf-result-copy");
+
+      pdfQuestions.forEach((question, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "jump";
+        button.textContent = index + 1;
+        button.title = `Go to PDF question ${index + 1} in ${question.category}`;
+        button.addEventListener("click", () => {
+          pdfCurrent = index;
+          renderPdfQuiz();
+        });
+        pdfJumpGrid.appendChild(button);
+      });
+
+      quizTabButton.addEventListener("click", () => setActiveTab("quiz"));
+      pdfTabButton.addEventListener("click", () => setActiveTab("pdf"));
+      pdfNextButton.addEventListener("click", () => {
+        if (pdfCurrent === pdfQuestions.length - 1) showPdfResults();
+        else {
+          pdfCurrent += 1;
+          renderPdfQuiz();
+        }
+      });
+      pdfPreviousButton.addEventListener("click", () => {
+        if (pdfCurrent > 0) {
+          pdfCurrent -= 1;
+          renderPdfQuiz();
+        }
+      });
+      document.getElementById("pdf-restart-btn").addEventListener("click", restartPdfQuiz);
+      renderPdfQuiz();
     </script>
   </body>
 </html>
