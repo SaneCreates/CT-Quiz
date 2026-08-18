@@ -3466,7 +3466,7 @@ window.pdfQuestionBank = [
       },
       {
         "number": 30,
-        "stem": "In system design, why validate with end users early? [4 marks] ii. Why is integrated thought important in problem-solving or decision-making? [2 marks] iii. Discuss three things you would check when evaluating the credibility of an article in the software engineering field [6 marks] and elaborate on how they have been used in your explanation. [10 marks] [4 marks] ii. Explain why an engineer must employ these fundamental elements in engineering reasoning. [4 marks] [6 marks] ii. What are rhetorical devices? [2 marks] iii. Discuss the purpose of rhetorical devices in technical communication. [4 marks] that runs across all platforms seamlessly, discuss five (5) reasons why it is important to think through your design concepts critically. [10 marks] [2 marks] ii. Mention any three logical fallacies and explain why they must be avoided in critical thinking. [6 marks]",
+        "stem": "In system design, why validate with end users early?",
         "options": [
           {
             "label": "A",
@@ -3483,30 +3483,6 @@ window.pdfQuestionBank = [
           {
             "label": "D",
             "text": "To fill time in project schedules"
-          },
-          {
-            "label": "A",
-            "text": "i. In your own words, define critical thinking and integrated thought"
-          },
-          {
-            "label": "B",
-            "text": "Explain the concept of APIs to a non-technical audience using a rhetorical device(s). Name the devices"
-          },
-          {
-            "label": "C",
-            "text": "i. Enumerate two fundamental elements involved in engineering reasoning"
-          },
-          {
-            "label": "A",
-            "text": "i. List and briefly explain three key components of critical thinking"
-          },
-          {
-            "label": "B",
-            "text": "As a student of UMaT-SRID, who has been asked to design a new Student Management System (MIS)"
-          },
-          {
-            "label": "C",
-            "text": "i. What are logical fallacies?"
           }
         ]
       }
