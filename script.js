@@ -3023,6 +3023,708 @@ const units = [
       },
     ],
   },
+  {
+    id: "sample-questions",
+    name: "Sample Questions",
+    questions: [
+      {
+        question:
+          "Requirements engineering follows the same activities and procedures for every software project, regardless of the project's size, domain, or complexity.",
+        options: ["True", "False"],
+        answer: 1,
+      },
+      {
+        question:
+          "One important responsibility of a requirements engineer is to organise and analyse stakeholder information so that a consistent and feasible set of system requirements can be developed.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following is an example of a functional requirement?",
+        options: [
+          "The system should be easy to maintain",
+          "The system should be portable across platforms",
+          "The system should allow users to reset forgotten passwords",
+          "The system should be highly reliable",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Software engineers can completely ignore hardware constraints when designing a computer-based system.",
+        options: ["True", "False"],
+        answer: 1,
+      },
+      {
+        question:
+          "A software test is considered successful when it reveals an error or defect that had not previously been identified.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which project management tool is commonly used to display project activities against a schedule?",
+        options: ["PERT Chart", "Flowchart", "Gantt Chart", "Use Case Diagram"],
+        answer: 2,
+      },
+      {
+        question:
+          "A company is developing a payroll system for a government institution. The requirements are well understood, fully documented, and unlikely to change. Which software process model is most suitable?",
+        options: [
+          "Spiral Model",
+          "Agile Model",
+          "Waterfall Model",
+          "Prototyping Model",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Use cases are developed to help software developers understand how users and external actors interact with a proposed software system.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which statement best describes the purpose of software testing?",
+        options: [
+          "To prove that software contains no errors",
+          "To evaluate software and identify defects or failures",
+          "To replace the need for software design",
+          "To increase the size of the software",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "A hospital information system must minimise risks because system failure could seriously affect patient safety. Which software process model is particularly suitable for managing such risks?",
+        options: [
+          "Spiral Model",
+          "Agile Model",
+          "Waterfall Model",
+          "Rapid Application Development Model",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "What is the major characteristic that distinguishes the Spiral Model from many other software process models?",
+        options: [
+          "It eliminates customer participation",
+          "It combines iterative development with systematic risk analysis",
+          "It requires no testing activities",
+          "It prevents changes to requirements",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following reflects a core value of the Agile Manifesto?",
+        options: [
+          "Comprehensive documentation over working software",
+          "Following a fixed plan over responding to change",
+          "Customer collaboration over contract negotiation",
+          "Processes and tools over individuals and interactions",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "In the Concurrent Development Model, the design activity has been completed but cannot proceed until changes are made to address inconsistencies discovered in the requirements. What is the current state of the design activity?",
+        options: [
+          "Baselined",
+          "Under Development",
+          "Awaiting Changes",
+          "Inactive",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Which set of characteristics best represents Agile software development?",
+        options: [
+          "Sequential, rigid, and predictive",
+          "Iterative, incremental, adaptive, and collaborative",
+          "Linear, documentation-intensive, and fixed",
+          "Contract-driven and strictly phase-oriented",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which Agile framework is widely used for managing software development through short, time-boxed iterations called sprints?",
+        options: [
+          "Extreme Programming (XP)",
+          "Dynamic Systems Development Method (DSDM)",
+          "Scrum",
+          "Crystal",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Which of the following is NOT normally considered a major cost driver in software project estimation?",
+        options: [
+          "Project size",
+          "Team capability",
+          "Requirements stability",
+          "Location of the organisation's office building",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "A software system is divided into components such as authentication, payment processing, and reporting. Each component is estimated individually, and the estimates are then combined. Which estimation technique is being used?",
+        options: [
+          "Expert Judgment",
+          "Analogous Estimation",
+          "Bottom-Up Estimation",
+          "Three-Point Estimation",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "In the COCOMO model, a software project developed under strict hardware, safety, operational, or regulatory constraints is classified as:",
+        options: ["Organic", "Semi-Detached", "Embedded", "Incremental"],
+        answer: 2,
+      },
+      {
+        question:
+          "Which component usually represents the largest proportion of the total cost of a software development project?",
+        options: [
+          "Hardware infrastructure",
+          "Testing tools",
+          "Personnel costs",
+          "Office furniture",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Why is a contingency reserve included in a software project budget?",
+        options: [
+          "To increase employee salaries",
+          "To purchase unnecessary software tools",
+          "To cover unforeseen risks and unexpected expenses",
+          "To reduce the project's scope",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Which of the following is the primary objective of requirements elicitation?",
+        options: [
+          "To write program code",
+          "To identify and understand stakeholder needs and expectations",
+          "To test the completed software",
+          "To deploy the system",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following is NOT a commonly used technique for gathering software requirements?",
+        options: [
+          "Interviews",
+          "Questionnaires",
+          "Observation",
+          "Code compilation",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          'A requirement stating that "the system shall generate a monthly sales report" is best classified as:',
+        options: [
+          "Functional requirement",
+          "Non-functional requirement",
+          "Business constraint",
+          "Quality metric",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          'A requirement stating that "the system shall respond to a user request within two seconds" is an example of:',
+        options: [
+          "Functional requirement",
+          "Non-functional requirement",
+          "User interface requirement only",
+          "Business process requirement",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which quality attribute refers to the ability of a software system to continue operating correctly without failure for a specified period?",
+        options: ["Portability", "Reliability", "Maintainability", "Usability"],
+        answer: 1,
+      },
+      {
+        question: "Requirements validation is performed mainly to ensure that:",
+        options: [
+          "The software has already been coded",
+          "Requirements accurately reflect stakeholder needs and are complete and consistent",
+          "All users know how to program",
+          "The project has been deployed",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following is most likely to be a stakeholder in a university student registration system?",
+        options: [
+          "Students",
+          "Lecturers",
+          "University administrators",
+          "All of the above",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "Which software process model is most appropriate when requirements are expected to change frequently during development?",
+        options: [
+          "Waterfall Model",
+          "Agile Model",
+          "V-Model",
+          "Linear Sequential Model",
+        ],
+        answer: 1,
+      },
+      {
+        question: "The main purpose of developing a software prototype is to:",
+        options: [
+          "Completely replace the final software system",
+          "Help stakeholders better understand and refine system requirements",
+          "Eliminate the need for testing",
+          "Prevent users from providing feedback",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following best describes incremental software development?",
+        options: [
+          "The complete system is delivered only after all development activities are finished",
+          "The system is developed and delivered in several functional increments",
+          "Development takes place without any planning",
+          "Requirements cannot be changed once development starts",
+        ],
+        answer: 1,
+      },
+      {
+        question: "In Scrum, what is the main purpose of a Sprint?",
+        options: [
+          "To perform system maintenance indefinitely",
+          "To develop a potentially usable product increment within a fixed time period",
+          "To document all future requirements",
+          "To eliminate customer involvement",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which Scrum role is primarily responsible for maximising the value of the product and managing the Product Backlog?",
+        options: [
+          "Scrum Master",
+          "Product Owner",
+          "Developer",
+          "Project Sponsor",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which Scrum event is conducted at the end of a Sprint to inspect the completed work and gather feedback from stakeholders?",
+        options: [
+          "Sprint Planning",
+          "Daily Scrum",
+          "Sprint Review",
+          "Backlog Refinement",
+        ],
+        answer: 2,
+      },
+      {
+        question: "Which statement about the Daily Scrum is correct?",
+        options: [
+          "It is normally held once every month",
+          "It is a short meeting in which the development team coordinates its work",
+          "It is conducted only after the project is completed",
+          "It is used to replace all project documentation",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which Agile principle encourages software teams to deliver useful working software regularly?",
+        options: [
+          "Deliver working software frequently",
+          "Avoid customer involvement",
+          "Complete all documentation before development",
+          "Prevent changes to requirements",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following best describes software project estimation?",
+        options: [
+          "Determining the likely effort, cost, duration, and resources required for a project",
+          "Identifying programming syntax errors only",
+          "Deploying software to users",
+          "Writing the software requirements specification",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "In Three-Point Estimation, which three estimates are commonly considered?",
+        options: [
+          "Maximum, minimum, and average cost",
+          "Optimistic, most likely, and pessimistic estimates",
+          "Personnel, hardware, and software costs",
+          "Design, coding, and testing estimates",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "A project manager estimates the effort required for a new project by comparing it with the cost and duration of a similar project completed previously. Which estimation technique is being used?",
+        options: [
+          "Bottom-Up Estimation",
+          "Parametric Estimation",
+          "Analogous Estimation",
+          "Three-Point Estimation",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Which of the following is a major advantage of Bottom-Up Estimation?",
+        options: [
+          "It requires no knowledge of individual tasks",
+          "It provides detailed estimates by analysing smaller components of the project",
+          "It is always faster than every other estimation technique",
+          "It eliminates estimation uncertainty",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following is least likely to contribute to the failure of a software project?",
+        options: [
+          "Significant cost overruns",
+          "Lack of technical expertise within the project team",
+          "Poorly defined project timelines",
+          "A clearly defined chain of command",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "Software engineering requires a systematic approach to developing software so that the development process can be managed, repeated, and improved.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following is NOT normally included in a Software Requirements Specification (SRS)?",
+        options: [
+          "Functional requirements",
+          "Non-functional requirements",
+          "System constraints and assumptions",
+          "Detailed source code for implementing the system",
+        ],
+        answer: 3,
+      },
+      {
+        question: "Software can best be defined as a combination of:",
+        options: [
+          "Programs only",
+          "Hardware and programs",
+          "Programs, associated documentation, and operating procedures",
+          "Computers, networks, and databases only",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Which of the following is NOT primarily a core software engineering process activity?",
+        options: [
+          "Software specification",
+          "Software development",
+          "Software validation",
+          "Manufacturing computer hardware",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "What should normally be done first when beginning the requirements elicitation process?",
+        options: [
+          "Develop the final system design",
+          "Identify relevant stakeholders",
+          "Write the program code",
+          "Test the completed system",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Why is requirements elicitation often considered a difficult software engineering activity?",
+        options: [
+          "Stakeholders may have different or conflicting needs",
+          "The problem domain may not be fully understood",
+          "Requirements may change during the project",
+          "All of the above",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "Which of the following is NOT commonly recognised as a major category of feasibility analysis?",
+        options: [
+          "Technical feasibility",
+          "Economic feasibility",
+          "Operational feasibility",
+          "Colour feasibility",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "Which of the following may be considered stakeholders in a software development project?",
+        options: [
+          "Customers",
+          "End-users",
+          "Project managers",
+          "Project sponsors",
+          "All of the above",
+        ],
+        answer: 4,
+      },
+      {
+        question:
+          "The main objective of a software engineering process is to produce software that is:",
+        options: [
+          "Reliable and cost-effective",
+          "Expensive and complex",
+          "Developed without user involvement",
+          "Delivered without testing",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "A project manager wants to minimise software project risks. Which of the following is the most appropriate action?",
+        options: [
+          "Ignore potential problems until they occur",
+          "Identify, analyse, monitor, and control project risks",
+          "Add more developers to every project",
+          "Eliminate all project deadlines",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "The Software Development Life Cycle (SDLC) is a structured framework consisting of defined stages used to guide the development of a software product.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following provides the best indication of overall software project success?",
+        options: [
+          "The software was developed regardless of whether it meets user needs",
+          "The software meets agreed requirements and delivers value within acceptable constraints",
+          "The project employed a large number of programmers",
+          "The system contains many features",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following is least likely to be a risk factor for software project failure?",
+        options: [
+          "Ambiguous requirements",
+          "Inadequate technical competence",
+          "Poor cost and schedule estimation",
+          "A clearly defined project scope",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "Functional requirements describe the services and behaviours that a software system is expected to provide.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following is an example of a functional requirement?",
+        options: [
+          "The system shall allow students to register for courses online.",
+          "The system shall be easy to maintain.",
+          "The system shall be portable across operating systems.",
+          "The system shall achieve high reliability.",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following is NOT normally used as a requirements elicitation technique?",
+        options: [
+          "Interviews",
+          "Observation",
+          "Questionnaires",
+          "Randomly writing program code",
+        ],
+        answer: 3,
+      },
+      {
+        question:
+          "Requirements documentation provides a structured record of the system requirements and helps communicate agreed requirements among stakeholders.",
+        options: ["True", "False"],
+        answer: 0,
+      },
+      {
+        question:
+          "Which of the following is NOT a desirable characteristic of a high-quality Software Requirements Specification?",
+        options: ["Complete", "Consistent", "Ambiguous", "Modifiable"],
+        answer: 2,
+      },
+      {
+        question:
+          "According to Brooks' Law, adding more programmers to a late software project will always help the project recover its schedule.",
+        options: ["True", "False"],
+        answer: 1,
+      },
+      {
+        question:
+          "A company wants to develop an online banking application. Before investing heavily in development, it investigates whether the required technology and technical skills are available. What type of feasibility is being assessed?",
+        options: [
+          "Economic feasibility",
+          "Technical feasibility",
+          "Operational feasibility",
+          "Legal feasibility",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "A proposed software system is analysed to determine whether its expected benefits justify the cost of development, operation, and maintenance. This is known as:",
+        options: [
+          "Technical feasibility",
+          "Operational feasibility",
+          "Economic feasibility",
+          "Requirements validation",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "A new software system is technically possible and affordable, but employees are unwilling or unable to use it effectively. Which aspect of feasibility is most affected?",
+        options: [
+          "Economic feasibility",
+          "Operational feasibility",
+          "Technical feasibility",
+          "Schedule feasibility",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following best describes a non-functional requirement?",
+        options: [
+          "A service the system must provide",
+          "A quality attribute or constraint that affects how the system operates",
+          "A programming language used to develop the system",
+          "A list of project team members",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the following is an example of a non-functional requirement?",
+        options: [
+          "The system shall generate examination results.",
+          "The system shall allow users to log in.",
+          "The system shall respond to user requests within two seconds.",
+          "The system shall allow administrators to add new users.",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Requirements validation is performed primarily to ensure that requirements are:",
+        options: [
+          "Written only by programmers",
+          "Complete, consistent, realistic, and aligned with stakeholder needs",
+          "Converted directly into source code",
+          "Kept secret from users",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "During a project, two stakeholders request different and incompatible features. What should the requirements engineer do first?",
+        options: [
+          "Implement both requirements without discussion",
+          "Ignore both stakeholders",
+          "Analyse the conflict and work with stakeholders to negotiate and prioritise the requirements",
+          "Immediately cancel the project",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "Which of the following best explains requirements volatility?",
+        options: [
+          "Requirements remain unchanged throughout the project",
+          "Requirements frequently change after they have been identified",
+          "Software automatically corrects its own requirements",
+          "The project has no stakeholders",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "A project team discovers that the original requirements contain conflicting statements. Which requirements quality characteristic has been violated?",
+        options: [
+          "Consistency",
+          "Modifiability",
+          "Traceability",
+          "Portability",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "A university is planning a new student information system. The project team estimates the development cost, evaluates available technology, considers whether staff will accept the system, and assesses whether it can be completed within the required time. What activity is the team primarily performing?",
+        options: [
+          "Software testing",
+          "Feasibility study",
+          "Software maintenance",
+          "Coding",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "Which of the statements best explains why software project estimates should be reviewed and revised throughout the project lifecycle?",
+        options: [
+          "Initial estimates are always completely accurate",
+          "Project requirements, risks, resources, and assumptions may change over time",
+          "Estimation is only useful during system testing",
+          "Revising estimates automatically reduces project costs",
+        ],
+        answer: 1,
+      },
+    ],
+  },
 ];
 
 const state = {

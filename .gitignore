@@ -1,0 +1,12 @@
+node_modules/
+*.pdf
+*.pptx
+*.docx
+*.zip
+*.xlsx
+*.rar
+check_*.py
+count_*.py
+extract_*.py
+pdf_questions_full.txt
+.DS_Store
